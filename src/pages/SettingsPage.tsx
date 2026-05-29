@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../contexts/AppContext';
 import { SUPPORTED_LANGUAGES } from '../shared/constants';
-import './SettingsPage.css';
 
 export function SettingsPage() {
   const navigate = useNavigate();
@@ -33,66 +32,82 @@ export function SettingsPage() {
   };
 
   return (
-    <div className="settings-page">
+    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
       {/* 헤더 */}
-      <header className="header">
-        <button
-          className="back-button"
-          onClick={() => navigate('/')}
-        >
-          ← {t('common.back')}
-        </button>
-        <h1 className="title">{t('settings.title')}</h1>
+      <header className="flex-shrink-0 header-safe-top pb-3 px-5 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+        <div className="flex justify-between items-center">
+          <button className="text-2xl text-gray-900 dark:text-gray-100 hover:opacity-80 active:scale-95 transition-transform" onClick={() => navigate('/')}>
+            ←
+          </button>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white flex-1 text-center">{t('settings.title')}</h1>
+          <div className="w-6"></div>
+        </div>
       </header>
 
-      <div className="scroll-view">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
         {/* 언어 설정 */}
-        <section className="setting-section card">
-          <h2 className="section-title">{t('settings.language')}</h2>
-          <div className="setting-options">
+        <section className="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">{t('settings.language')}</h2>
+          <div className="space-y-2">
             {SUPPORTED_LANGUAGES.map((lang) => (
               <button
                 key={lang.code}
-                className={`setting-option ${language === lang.code ? 'active' : ''}`}
+                className={`w-full flex items-center gap-3 p-3 rounded-xl transition-colors ${
+                  language === lang.code
+                    ? 'bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-500'
+                    : 'bg-gray-50 dark:bg-gray-800 border-2 border-transparent hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
                 onClick={() => setLanguage(lang.code as any)}
               >
-                <span className="setting-icon">{lang.flag}</span>
-                <span className="setting-text">{lang.name}</span>
-                {language === lang.code && <span className="check-icon">✓</span>}
+                <span className="text-2xl">{lang.flag}</span>
+                <span className="flex-1 text-left font-medium text-gray-900 dark:text-white">{lang.name}</span>
+                {language === lang.code && <span className="text-blue-500 text-xl font-bold">✓</span>}
               </button>
             ))}
           </div>
         </section>
 
         {/* 테마 설정 */}
-        <section className="setting-section card">
-          <h2 className="section-title">{t('settings.theme')}</h2>
-          <div className="setting-options">
+        <section className="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">{t('settings.theme')}</h2>
+          <div className="space-y-2">
             <button
-              className={`setting-option ${themeMode === 'auto' ? 'active' : ''}`}
+              className={`w-full flex items-center gap-3 p-3 rounded-xl transition-colors ${
+                themeMode === 'auto'
+                  ? 'bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-500'
+                  : 'bg-gray-50 dark:bg-gray-800 border-2 border-transparent hover:bg-gray-100 dark:hover:bg-gray-700'
+              }`}
               onClick={() => setThemeMode('auto')}
             >
-              <span className="setting-icon">🔄</span>
-              <span className="setting-text">{t('settings.auto')}</span>
-              {themeMode === 'auto' && <span className="check-icon">✓</span>}
+              <span className="text-2xl">🔄</span>
+              <span className="flex-1 text-left font-medium text-gray-900 dark:text-white">{t('settings.auto')}</span>
+              {themeMode === 'auto' && <span className="text-blue-500 text-xl font-bold">✓</span>}
             </button>
 
             <button
-              className={`setting-option ${themeMode === 'light' ? 'active' : ''}`}
+              className={`w-full flex items-center gap-3 p-3 rounded-xl transition-colors ${
+                themeMode === 'light'
+                  ? 'bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-500'
+                  : 'bg-gray-50 dark:bg-gray-800 border-2 border-transparent hover:bg-gray-100 dark:hover:bg-gray-700'
+              }`}
               onClick={() => setThemeMode('light')}
             >
-              <span className="setting-icon">☀️</span>
-              <span className="setting-text">{t('settings.light')}</span>
-              {themeMode === 'light' && <span className="check-icon">✓</span>}
+              <span className="text-2xl">☀️</span>
+              <span className="flex-1 text-left font-medium text-gray-900 dark:text-white">{t('settings.light')}</span>
+              {themeMode === 'light' && <span className="text-blue-500 text-xl font-bold">✓</span>}
             </button>
 
             <button
-              className={`setting-option ${themeMode === 'dark' ? 'active' : ''}`}
+              className={`w-full flex items-center gap-3 p-3 rounded-xl transition-colors ${
+                themeMode === 'dark'
+                  ? 'bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-500'
+                  : 'bg-gray-50 dark:bg-gray-800 border-2 border-transparent hover:bg-gray-100 dark:hover:bg-gray-700'
+              }`}
               onClick={() => setThemeMode('dark')}
             >
-              <span className="setting-icon">🌙</span>
-              <span className="setting-text">{t('settings.dark')}</span>
-              {themeMode === 'dark' && <span className="check-icon">✓</span>}
+              <span className="text-2xl">🌙</span>
+              <span className="flex-1 text-left font-medium text-gray-900 dark:text-white">{t('settings.dark')}</span>
+              {themeMode === 'dark' && <span className="text-blue-500 text-xl font-bold">✓</span>}
             </button>
           </div>
         </section>

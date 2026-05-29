@@ -16,7 +16,6 @@ import { PetHealthStorage } from '../utils/storage';
 import { useApp } from '../contexts/AppContext';
 import { calculateAge, generateId } from '../shared/utils';
 import type { Pet } from '../shared/types';
-import './PetProfilePage.css';
 
 export function PetProfilePage() {
   const navigate = useNavigate();
@@ -105,121 +104,138 @@ export function PetProfilePage() {
   };
 
   return (
-    <div className="pet-profile-page">
+    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-950 overflow-hidden">
       {/* 헤더 */}
-      <header className="header">
-        <button className="back-button" onClick={() => navigate('/')}>
-          ←
-        </button>
-        <h1 className="title">{t('pet.title')}</h1>
-        <div className="placeholder"></div>
+      <header className="flex-shrink-0 header-safe-top pb-3 px-5 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+        <div className="flex justify-between items-center">
+          <button className="text-2xl text-gray-900 dark:text-gray-100 hover:opacity-80 active:scale-95 transition-transform" onClick={() => navigate('/')}>
+            ←
+          </button>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white flex-1 text-center">{t('pet.title')}</h1>
+          <div className="w-6"></div>
+        </div>
       </header>
 
-      <div className="scroll-view">
+      <div className="flex-1 overflow-y-auto pb-6 custom-scrollbar">
         {pets.length === 0 ? (
-          <div className="empty-card card">
-            <span className="empty-icon">🐾</span>
-            <p className="empty-text">{t('pet.emptyTitle')}</p>
-            <p className="empty-subtext">{t('pet.emptySubtitle')}</p>
+          <div className="m-4 bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm text-center">
+            <span className="text-5xl block mb-3">🐾</span>
+            <p className="text-base font-semibold text-gray-900 dark:text-white mb-2">{t('pet.emptyTitle')}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{t('pet.emptySubtitle')}</p>
           </div>
         ) : (
-          pets.map((pet) => (
-            <div key={pet.id} className="pet-card card">
-              <div className="pet-header">
-                <div className="pet-avatar">
-                  <span className="pet-avatar-text">
-                    {pet.species === t('pet.dog') ? '🐶' : pet.species === t('pet.cat') ? '🐱' : '🐾'}
-                  </span>
-                </div>
-                <div className="pet-info">
-                  <h3 className="pet-name">{pet.name}</h3>
-                  <p className="pet-breed">
-                    {pet.breed || pet.species}
-                    {pet.birthDate && ` · ${calculateAge(pet.birthDate)}`}
-                  </p>
-                </div>
-              </div>
-
-              <div className="pet-details">
-                {pet.gender && pet.gender !== 'unknown' && (
-                  <div className="detail-row">
-                    <span className="detail-label">{t('pet.gender')}</span>
-                    <span className="detail-value">
-                      {pet.gender === 'male' ? t('pet.male') : t('pet.female')}
+          <div className="p-4 space-y-3">
+            {pets.map((pet) => (
+              <div key={pet.id} className="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm">
+                <div className="flex items-start mb-4">
+                  <div className="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
+                    <span className="text-2xl">
+                      {pet.species === t('pet.dog') ? '🐶' : pet.species === t('pet.cat') ? '🐱' : '🐾'}
                     </span>
                   </div>
-                )}
-                {pet.weight && (
-                  <div className="detail-row">
-                    <span className="detail-label">{t('pet.weight')}</span>
-                    <span className="detail-value">{pet.weight}{t('pet.kg')}</span>
+                  <div className="ml-3 flex-1 min-w-0">
+                    <h3 className="text-base font-bold text-gray-900 dark:text-white">{pet.name}</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {pet.breed || pet.species}
+                      {pet.birthDate && ` · ${calculateAge(pet.birthDate)}`}
+                    </p>
                   </div>
-                )}
-                {pet.birthDate && (
-                  <div className="detail-row">
-                    <span className="detail-label">{t('pet.birthDate')}</span>
-                    <span className="detail-value">
-                      {new Date(pet.birthDate).toLocaleDateString('ko-KR')}
-                    </span>
-                  </div>
-                )}
-                {pet.notes && (
-                  <div className="detail-row">
-                    <span className="detail-label">{t('pet.notes')}</span>
-                    <span className="detail-value">{pet.notes}</span>
-                  </div>
-                )}
-              </div>
+                </div>
 
-              <div className="pet-actions">
-                <button className="button-secondary" onClick={() => openModal(pet)}>
-                  {t('common.edit')}
-                </button>
-                <button className="button-ghost" onClick={() => handleDelete(pet)}>
-                  {t('common.delete')}
-                </button>
+                <div className="space-y-2 mb-4">
+                  {pet.gender && pet.gender !== 'unknown' && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600 dark:text-gray-400">{t('pet.gender')}</span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {pet.gender === 'male' ? t('pet.male') : t('pet.female')}
+                      </span>
+                    </div>
+                  )}
+                  {pet.weight && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600 dark:text-gray-400">{t('pet.weight')}</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{pet.weight}{t('pet.kg')}</span>
+                    </div>
+                  )}
+                  {pet.birthDate && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600 dark:text-gray-400">{t('pet.birthDate')}</span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {new Date(pet.birthDate).toLocaleDateString('ko-KR')}
+                      </span>
+                    </div>
+                  )}
+                  {pet.notes && (
+                    <div className="text-sm">
+                      <span className="text-gray-600 dark:text-gray-400 block mb-1">{t('pet.notes')}</span>
+                      <span className="text-gray-900 dark:text-white">{pet.notes}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex gap-2">
+                  <button 
+                    className="flex-1 py-2.5 px-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-colors active:scale-95"
+                    onClick={() => openModal(pet)}
+                  >
+                    {t('common.edit')}
+                  </button>
+                  <button 
+                    className="flex-1 py-2.5 px-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-900 dark:text-white font-semibold rounded-xl transition-colors active:scale-95"
+                    onClick={() => handleDelete(pet)}
+                  >
+                    {t('common.delete')}
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
+            ))}
+          </div>
         )}
       </div>
 
       {/* 추가 버튼 */}
-      <footer className="footer">
-        <button className="button-primary" onClick={() => openModal()}>
+      <footer className="flex-shrink-0 p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+        <button 
+          className="w-full py-3 px-6 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-colors active:scale-95"
+          onClick={() => openModal()}
+        >
           {t('pet.addButton')}
         </button>
       </footer>
 
       {/* 추가/수정 모달 */}
       {modalVisible && (
-        <div className="modal-overlay" onClick={() => setModalVisible(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <button className="modal-close" onClick={() => setModalVisible(false)}>
+        <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4" onClick={() => setModalVisible(false)}>
+          <div className="w-full max-w-lg bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-3xl max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+            <div className="flex-shrink-0 flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-800">
+              <button className="text-xl text-gray-900 dark:text-gray-100 w-8 h-8 hover:opacity-80" onClick={() => setModalVisible(false)}>
                 ✕
               </button>
-              <h2 className="modal-title">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                 {editingPet ? t('pet.edit') : t('pet.add')}
               </h2>
-              <div className="placeholder"></div>
+              <div className="w-8"></div>
             </div>
 
-            <div className="modal-body">
-              <div className="form-group">
-                <label className="label">{t('pet.name')} *</label>
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                  {t('pet.name')} *
+                </label>
                 <input
                   type="text"
-                  className="input"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder={t('pet.namePlaceholder')}
                 />
               </div>
 
-              <div className="form-group">
-                <label className="label">{t('pet.species')}</label>
-                <div className="radio-group">
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                  {t('pet.species')}
+                </label>
+                <div className="flex gap-2">
                   {[
                     { value: t('pet.dog'), label: t('pet.dog') },
                     { value: t('pet.cat'), label: t('pet.cat') },
@@ -227,7 +243,11 @@ export function PetProfilePage() {
                   ].map((s) => (
                     <button
                       key={s.value}
-                      className={`radio-button ${species === s.value ? 'active' : ''}`}
+                      className={`flex-1 py-2.5 px-4 rounded-xl font-medium transition-colors ${
+                        species === s.value
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700'
+                      }`}
                       onClick={() => setSpecies(s.value)}
                     >
                       {s.label}
@@ -236,20 +256,24 @@ export function PetProfilePage() {
                 </div>
               </div>
 
-              <div className="form-group">
-                <label className="label">{t('pet.breed')}</label>
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                  {t('pet.breed')}
+                </label>
                 <input
                   type="text"
-                  className="input"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={breed}
                   onChange={(e) => setBreed(e.target.value)}
                   placeholder={t('pet.breedPlaceholder')}
                 />
               </div>
 
-              <div className="form-group">
-                <label className="label">{t('pet.gender')}</label>
-                <div className="radio-group">
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                  {t('pet.gender')}
+                </label>
+                <div className="flex gap-2">
                   {[
                     { value: 'male', label: t('pet.male') },
                     { value: 'female', label: t('pet.female') },
@@ -257,7 +281,11 @@ export function PetProfilePage() {
                   ].map((g) => (
                     <button
                       key={g.value}
-                      className={`radio-button ${gender === g.value ? 'active' : ''}`}
+                      className={`flex-1 py-2.5 px-4 rounded-xl font-medium transition-colors ${
+                        gender === g.value
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700'
+                      }`}
                       onClick={() => setGender(g.value as any)}
                     >
                       {g.label}
@@ -266,32 +294,38 @@ export function PetProfilePage() {
                 </div>
               </div>
 
-              <div className="form-group">
-                <label className="label">{t('pet.birthDate')}</label>
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                  {t('pet.birthDate')}
+                </label>
                 <input
                   type="date"
-                  className="input"
+                  className="w-full h-12 px-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={birthDate}
                   onChange={(e) => setBirthDate(e.target.value)}
                 />
               </div>
 
-              <div className="form-group">
-                <label className="label">{t('pet.weight')} ({t('pet.kg')})</label>
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                  {t('pet.weight')} ({t('pet.kg')})
+                </label>
                 <input
                   type="number"
                   step="0.1"
-                  className="input"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={weight}
                   onChange={(e) => setWeight(e.target.value)}
                   placeholder={t('weight.weightPlaceholder')}
                 />
               </div>
 
-              <div className="form-group">
-                <label className="label">{t('pet.notes')}</label>
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                  {t('pet.notes')}
+                </label>
                 <textarea
-                  className="input text-area"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder={t('pet.notesPlaceholder')}
@@ -299,7 +333,10 @@ export function PetProfilePage() {
                 />
               </div>
 
-              <button className="button-primary" onClick={handleSave}>
+              <button 
+                className="w-full py-3 px-6 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-colors active:scale-95" 
+                onClick={handleSave}
+              >
                 {t('common.save')}
               </button>
             </div>

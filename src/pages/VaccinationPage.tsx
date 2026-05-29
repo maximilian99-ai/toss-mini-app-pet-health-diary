@@ -15,7 +15,6 @@ import { PetHealthStorage } from '../utils/storage';
 import { useApp } from '../contexts/AppContext';
 import { generateId } from '../shared/utils';
 import type { Pet, Vaccination } from '../shared/types';
-import './VaccinationPage.css';
 
 export function VaccinationPage() {
   const navigate = useNavigate();
@@ -133,16 +132,25 @@ export function VaccinationPage() {
 
   if (pets.length === 0) {
     return (
-      <div className="vaccination-page">
-        <header className="header">
-          <button className="back-button" onClick={() => navigate('/')}>←</button>
-          <h1 className="title">{t('vaccination.title')}</h1>
-          <div className="placeholder"></div>
+      <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
+        <header className="flex-shrink-0 header-safe-top pb-3 px-5 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+          <div className="flex justify-between items-center">
+            <button className="text-2xl text-gray-900 dark:text-gray-100 hover:opacity-80 active:scale-95 transition-transform" onClick={() => navigate('/')}>
+              ←
+            </button>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white flex-1 text-center">{t('vaccination.title')}</h1>
+            <div className="w-6"></div>
+          </div>
         </header>
-        <div className="center-content">
-          <span className="empty-icon">🐾</span>
-          <p className="empty-text">{t('vaccination.noPetsTitle')}</p>
-          <button className="button-primary" onClick={() => navigate('/pet-profile')}>
+        <div className="flex flex-col items-center justify-center min-h-[60vh] px-6">
+          <span className="text-6xl mb-4">🐾</span>
+          <p className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+            {t('vaccination.noPetsTitle')}
+          </p>
+          <button 
+            className="mt-4 w-full max-w-xs px-4 py-4 bg-blue-600 text-white rounded-xl text-base font-semibold active:bg-blue-700"
+            onClick={() => navigate('/pet-profile')}
+          >
             {t('pet.register')}
           </button>
         </div>
@@ -151,19 +159,27 @@ export function VaccinationPage() {
   }
 
   return (
-    <div className="vaccination-page">
-      <header className="header">
-        <button className="back-button" onClick={() => navigate('/')}>←</button>
-        <h1 className="title">{t('vaccination.title')}</h1>
-        <div className="placeholder"></div>
+    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
+      <header className="flex-shrink-0 header-safe-top pb-3 px-5 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+        <div className="flex justify-between items-center">
+          <button className="text-2xl text-gray-900 dark:text-gray-100 hover:opacity-80 active:scale-95 transition-transform" onClick={() => navigate('/')}>
+            ←
+          </button>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white flex-1 text-center">{t('vaccination.title')}</h1>
+          <div className="w-6"></div>
+        </div>
       </header>
 
-      <div className="scroll-view">
+      <div className="flex-1 overflow-y-auto p-4 pb-20">
         {vaccinations.length === 0 ? (
-          <div className="empty-card card">
-            <span className="empty-icon">💉</span>
-            <p className="empty-text">{t('vaccination.emptyTitle')}</p>
-            <p className="empty-subtext">{t('vaccination.emptySubtitle')}</p>
+          <div className="bg-white dark:bg-gray-900 rounded-xl p-10 shadow-sm flex flex-col items-center text-center">
+            <span className="text-6xl mb-4">💉</span>
+            <p className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+              {t('vaccination.emptyTitle')}
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              {t('vaccination.emptySubtitle')}
+            </p>
           </div>
         ) : (
           vaccinations.map((vaccination) => {
@@ -174,11 +190,22 @@ export function VaccinationPage() {
             const isOverdue = daysUntil !== null && daysUntil < 0;
 
             return (
-              <div key={vaccination.id} className="vaccination-card card">
-                <div className="card-header">
-                  <span className="pet-name-small">{getPetName(vaccination.petId)}</span>
+              <div 
+                key={vaccination.id} 
+                className="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm mb-4"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    {getPetName(vaccination.petId)}
+                  </span>
                   {(isUpcoming || isOverdue) && (
-                    <span className={`badge ${isOverdue ? 'badge-error' : 'badge-primary'}`}>
+                    <span 
+                      className={`px-2.5 py-1 rounded-xl text-xs font-semibold ${
+                        isOverdue 
+                          ? 'bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400' 
+                          : 'bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400'
+                      }`}
+                    >
                       {isOverdue 
                         ? t('vaccination.overdue') 
                         : t('vaccination.daysLeft', { days: daysUntil })}
@@ -186,43 +213,69 @@ export function VaccinationPage() {
                   )}
                 </div>
 
-                <h3 className="vaccine-name">💉 {vaccination.vaccineName}</h3>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
+                  💉 {vaccination.vaccineName}
+                </h3>
 
-                <div className="details-container">
-                  <div className="detail-row">
-                    <span className="detail-label">{t('vaccination.vaccinationDate')}</span>
-                    <span className="detail-value">{formatDate(vaccination.vaccinationDate)}</span>
+                <div className="flex flex-col gap-2 py-4 border-t border-b border-gray-200 dark:border-gray-800">
+                  <div className="flex justify-between items-start gap-4">
+                    <span className="text-sm text-gray-600 dark:text-gray-400 flex-shrink-0">
+                      {t('vaccination.vaccinationDate')}
+                    </span>
+                    <span className="text-sm text-gray-900 dark:text-gray-100 font-medium text-right">
+                      {formatDate(vaccination.vaccinationDate)}
+                    </span>
                   </div>
                   
                   {vaccination.nextDueDate && (
-                    <div className="detail-row">
-                      <span className="detail-label">{t('vaccination.nextDue')}</span>
-                      <span className={`detail-value ${isOverdue ? 'text-error' : ''}`}>
+                    <div className="flex justify-between items-start gap-4">
+                      <span className="text-sm text-gray-600 dark:text-gray-400 flex-shrink-0">
+                        {t('vaccination.nextDue')}
+                      </span>
+                      <span className={`text-sm font-medium text-right ${
+                        isOverdue 
+                          ? 'text-red-600 dark:text-red-400' 
+                          : 'text-gray-900 dark:text-gray-100'
+                      }`}>
                         {formatDate(vaccination.nextDueDate)}
                       </span>
                     </div>
                   )}
 
                   {vaccination.hospitalName && (
-                    <div className="detail-row">
-                      <span className="detail-label">{t('vaccination.hospital')}</span>
-                      <span className="detail-value">{vaccination.hospitalName}</span>
+                    <div className="flex justify-between items-start gap-4">
+                      <span className="text-sm text-gray-600 dark:text-gray-400 flex-shrink-0">
+                        {t('vaccination.hospital')}
+                      </span>
+                      <span className="text-sm text-gray-900 dark:text-gray-100 font-medium text-right">
+                        {vaccination.hospitalName}
+                      </span>
                     </div>
                   )}
 
                   {vaccination.notes && (
-                    <div className="detail-row">
-                      <span className="detail-label">{t('vaccination.notes')}</span>
-                      <span className="detail-value">{vaccination.notes}</span>
+                    <div className="flex justify-between items-start gap-4">
+                      <span className="text-sm text-gray-600 dark:text-gray-400 flex-shrink-0">
+                        {t('vaccination.notes')}
+                      </span>
+                      <span className="text-sm text-gray-900 dark:text-gray-100 font-medium text-right">
+                        {vaccination.notes}
+                      </span>
                     </div>
                   )}
                 </div>
 
-                <div className="card-actions">
-                  <button className="button-secondary" onClick={() => openModal(vaccination)}>
+                <div className="flex gap-2 mt-4">
+                  <button 
+                    className="flex-1 px-3 py-3 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl text-sm font-semibold active:bg-gray-200 dark:active:bg-gray-700"
+                    onClick={() => openModal(vaccination)}
+                  >
                     {t('common.edit')}
                   </button>
-                  <button className="button-ghost" onClick={() => handleDelete(vaccination)}>
+                  <button 
+                    className="flex-1 px-3 py-3 bg-transparent text-red-600 dark:text-red-400 border border-red-600 dark:border-red-400 rounded-xl text-sm font-semibold active:bg-red-50 dark:active:bg-red-950"
+                    onClick={() => handleDelete(vaccination)}
+                  >
                     {t('common.delete')}
                   </button>
                 </div>
@@ -232,89 +285,125 @@ export function VaccinationPage() {
         )}
       </div>
 
-      <footer className="footer">
-        <button className="button-primary" onClick={() => openModal()}>
+      <footer className="flex-shrink-0 p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 fixed bottom-0 left-0 right-0 md:max-w-[480px] md:mx-auto">
+        <button 
+          className="w-full px-4 py-4 bg-blue-600 text-white rounded-xl text-base font-semibold active:bg-blue-700"
+          onClick={() => openModal()}
+        >
           {t('vaccination.addButton')}
         </button>
       </footer>
 
       {/* 추가/수정 모달 */}
       {modalVisible && (
-        <div className="modal-overlay" onClick={() => setModalVisible(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <button className="modal-close" onClick={() => setModalVisible(false)}>✕</button>
-              <h2 className="modal-title">
+        <div 
+          className="fixed inset-0 bg-black/50 flex items-end md:items-center md:justify-center z-[1000] animate-fadeIn"
+          onClick={() => setModalVisible(false)}
+        >
+          <div 
+            className="w-full max-h-[90vh] md:max-w-[480px] md:max-h-[80vh] bg-white dark:bg-gray-900 rounded-t-2xl md:rounded-2xl flex flex-col animate-slideUp overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex-shrink-0 px-5 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
+              <button 
+                className="text-2xl text-gray-900 dark:text-gray-100 p-1 -ml-1" 
+                onClick={() => setModalVisible(false)}
+              >
+                ✕
+              </button>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 flex-1 text-center">
                 {editingVaccination ? t('vaccination.edit') : t('vaccination.add')}
               </h2>
-              <div className="placeholder"></div>
+              <div className="w-10"></div>
             </div>
 
-            <div className="modal-body">
-              <div className="form-group">
-                <label className="label">{t('pet.name')} *</label>
-                <div className="pet-selector-container">
+            <div className="flex-1 overflow-y-auto p-5">
+              <div className="mb-5">
+                <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                  {t('pet.name')} *
+                </label>
+                <div className="flex gap-2 overflow-x-auto pb-2">
                   {pets.map((pet) => (
                     <button
                       key={pet.id}
-                      className={`pet-selector ${selectedPetId === pet.id ? 'active' : ''}`}
+                      className={`flex-shrink-0 flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl border-2 transition-all ${
+                        selectedPetId === pet.id
+                          ? 'border-blue-600 bg-blue-50 dark:bg-blue-950'
+                          : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800'
+                      }`}
                       onClick={() => setSelectedPetId(pet.id)}
                     >
-                      <span className="pet-selector-emoji">
+                      <span className="text-3xl">
                         {pet.species === t('pet.dog') ? '🐶' : pet.species === t('pet.cat') ? '🐱' : '🐾'}
                       </span>
-                      <span className="pet-selector-name">{pet.name}</span>
+                      <span className={`text-sm font-medium ${
+                        selectedPetId === pet.id
+                          ? 'text-blue-600 dark:text-blue-400'
+                          : 'text-gray-600 dark:text-gray-400'
+                      }`}>
+                        {pet.name}
+                      </span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              <div className="form-group">
-                <label className="label">{t('vaccination.vaccineName')} *</label>
+              <div className="mb-5">
+                <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                  {t('vaccination.vaccineName')} *
+                </label>
                 <input
                   type="text"
-                  className="input"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-base text-gray-900 dark:text-gray-100 focus:outline-none focus:border-blue-600 dark:focus:border-blue-500"
                   value={vaccineName}
                   onChange={(e) => setVaccineName(e.target.value)}
                   placeholder={t('vaccination.vaccineNamePlaceholder')}
                 />
               </div>
 
-              <div className="form-group">
-                <label className="label">{t('vaccination.vaccinationDate')} *</label>
+              <div className="mb-5">
+                <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                  {t('vaccination.vaccinationDate')} *
+                </label>
                 <input
                   type="date"
-                  className="input"
+                  className="w-full h-12 px-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-base text-gray-900 dark:text-gray-100 appearance-none focus:outline-none focus:border-blue-600 dark:focus:border-blue-500"
                   value={vaccinationDate}
                   onChange={(e) => setVaccinationDate(e.target.value)}
                 />
               </div>
 
-              <div className="form-group">
-                <label className="label">{t('vaccination.nextDue')}</label>
+              <div className="mb-5">
+                <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                  {t('vaccination.nextDue')}
+                </label>
                 <input
                   type="date"
-                  className="input"
+                  className="w-full h-12 px-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-base text-gray-900 dark:text-gray-100 appearance-none focus:outline-none focus:border-blue-600 dark:focus:border-blue-500"
                   value={nextDueDate}
                   onChange={(e) => setNextDueDate(e.target.value)}
                 />
               </div>
 
-              <div className="form-group">
-                <label className="label">{t('vaccination.hospital')}</label>
+              <div className="mb-5">
+                <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                  {t('vaccination.hospital')}
+                </label>
                 <input
                   type="text"
-                  className="input"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-base text-gray-900 dark:text-gray-100 focus:outline-none focus:border-blue-600 dark:focus:border-blue-500"
                   value={hospitalName}
                   onChange={(e) => setHospitalName(e.target.value)}
                   placeholder={t('vaccination.hospitalPlaceholder')}
                 />
               </div>
 
-              <div className="form-group">
-                <label className="label">{t('vaccination.notes')}</label>
+              <div className="mb-5">
+                <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                  {t('vaccination.notes')}
+                </label>
                 <textarea
-                  className="input text-area"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-base text-gray-900 dark:text-gray-100 focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 resize-vertical min-h-[100px]"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder={t('vaccination.notesPlaceholder')}
@@ -322,7 +411,10 @@ export function VaccinationPage() {
                 />
               </div>
 
-              <button className="button-primary" onClick={handleSave}>
+              <button 
+                className="w-full px-4 py-4 bg-blue-600 text-white rounded-xl text-base font-semibold active:bg-blue-700"
+                onClick={handleSave}
+              >
                 {t('common.save')}
               </button>
             </div>

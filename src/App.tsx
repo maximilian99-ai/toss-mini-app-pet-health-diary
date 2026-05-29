@@ -13,7 +13,6 @@ import { PetProfilePage } from './pages/PetProfilePage';
 import { VaccinationPage } from './pages/VaccinationPage';
 import { MedicalPage } from './pages/MedicalPage';
 import { WeightPage } from './pages/WeightPage';
-import './App.css';
 
 function App() {
   return (

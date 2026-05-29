@@ -16,7 +16,6 @@ import { PetHealthStorage } from '../utils/storage';
 import { useApp } from '../contexts/AppContext';
 import type { Pet, Vaccination, MedicalRecord } from '../shared/types';
 import { formatDate } from '../shared/utils';
-import './HomePage.css';
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -64,13 +63,13 @@ export function HomePage() {
   };
 
   return (
-    <div className="home-page">
+    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-950 overflow-hidden">
       {/* 헤더 */}
-      <header className="header">
-        <div className="header-content">
-          <h1 className="title">{t('app.title')}</h1>
+      <header className="flex-shrink-0 header-safe-top pb-3 px-5 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('app.title')}</h1>
           <button 
-            className="settings-button"
+            className="p-2 text-2xl hover:scale-110 transition-transform active:scale-95"
             onClick={() => navigate('/settings')}
           >
             ⚙️
@@ -78,50 +77,50 @@ export function HomePage() {
         </div>
       </header>
 
-      <div className="scroll-view">
+      <div className="flex-1 overflow-y-auto pb-6 custom-scrollbar">
         {/* 빠른 시작 버튼 */}
-        <section className="section">
-          <div className="quick-buttons">
+        <section className="mt-4 px-4">
+          <div className="grid grid-cols-4 gap-2">
             <button
-              className="quick-button quick-button-profile"
+              className="aspect-square rounded-2xl p-3 flex flex-col items-center justify-center bg-red-100 dark:bg-red-900/30 hover:-translate-y-0.5 transition-transform active:scale-95"
               onClick={() => navigate('/pet-profile')}
             >
-              <span className="quick-button-icon">🐶</span>
-              <span className="quick-button-text">{t('home.profile')}</span>
+              <span className="text-3xl mb-1">🐶</span>
+              <span className="text-xs font-medium text-gray-900 dark:text-white text-center">{t('home.profile')}</span>
             </button>
 
             <button
-              className="quick-button quick-button-vaccination"
+              className="aspect-square rounded-2xl p-3 flex flex-col items-center justify-center bg-blue-100 dark:bg-blue-900/30 hover:-translate-y-0.5 transition-transform active:scale-95"
               onClick={() => navigate('/vaccination')}
             >
-              <span className="quick-button-icon">💉</span>
-              <span className="quick-button-text">{t('home.vaccination')}</span>
+              <span className="text-3xl mb-1">💉</span>
+              <span className="text-xs font-medium text-gray-900 dark:text-white text-center">{t('home.vaccination')}</span>
             </button>
 
             <button
-              className="quick-button quick-button-medical"
+              className="aspect-square rounded-2xl p-3 flex flex-col items-center justify-center bg-green-100 dark:bg-green-900/30 hover:-translate-y-0.5 transition-transform active:scale-95"
               onClick={() => navigate('/medical')}
             >
-              <span className="quick-button-icon">🏥</span>
-              <span className="quick-button-text">{t('home.medical')}</span>
+              <span className="text-3xl mb-1">🏥</span>
+              <span className="text-xs font-medium text-gray-900 dark:text-white text-center">{t('home.medical')}</span>
             </button>
 
             <button
-              className="quick-button quick-button-weight"
+              className="aspect-square rounded-2xl p-3 flex flex-col items-center justify-center bg-amber-100 dark:bg-amber-900/30 hover:-translate-y-0.5 transition-transform active:scale-95"
               onClick={() => navigate('/weight')}
             >
-              <span className="quick-button-icon">⚖️</span>
-              <span className="quick-button-text">{t('home.weight')}</span>
+              <span className="text-3xl mb-1">⚖️</span>
+              <span className="text-xs font-medium text-gray-900 dark:text-white text-center">{t('home.weight')}</span>
             </button>
           </div>
         </section>
 
         {/* 내 반려동물 */}
-        <section className="section">
-          <div className="section-header">
-            <h2 className="section-title">{t('pet.list')}</h2>
+        <section className="mt-4 px-4">
+          <div className="flex justify-between items-center mb-3">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white">{t('pet.list')}</h2>
             <button 
-              className="section-link"
+              className="text-2xl font-light text-blue-500 px-2 hover:opacity-80"
               onClick={() => navigate('/pet-profile')}
             >
               ›
@@ -129,31 +128,31 @@ export function HomePage() {
           </div>
 
           {pets.length === 0 ? (
-            <div className="empty-card card">
-              <span className="empty-icon">🐾</span>
-              <p className="empty-text">{t('home.noPets')}</p>
+            <div className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm text-center">
+              <span className="text-5xl block mb-3">🐾</span>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">{t('home.noPets')}</p>
               <button
-                className="button-primary"
+                className="w-full py-3 px-6 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-colors active:scale-95"
                 onClick={() => navigate('/pet-profile')}
               >
                 {t('pet.add')}
               </button>
             </div>
           ) : (
-            <div className="pet-cards-container">
+            <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
               {pets.map((pet) => (
                 <button
                   key={pet.id}
-                  className="pet-card"
+                  className="flex-shrink-0 w-28 bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm hover:-translate-y-0.5 transition-transform active:scale-95"
                   onClick={() => navigate(`/pet-profile/${pet.id}`)}
                 >
-                  <div className="pet-avatar">
-                    <span className="pet-avatar-text">
+                  <div className="w-16 h-16 mx-auto mb-2 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                    <span className="text-3xl">
                       {pet.species === t('pet.dog') ? '🐶' : pet.species === t('pet.cat') ? '🐱' : '🐾'}
                     </span>
                   </div>
-                  <p className="pet-name">{pet.name}</p>
-                  <p className="pet-breed">{pet.breed || pet.species}</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{pet.name}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{pet.breed || pet.species}</p>
                 </button>
               ))}
             </div>
@@ -162,63 +161,67 @@ export function HomePage() {
 
         {/* 다가오는 예방접종 */}
         {upcomingVaccinations.length > 0 && (
-          <section className="section">
-            <div className="section-header">
-              <h2 className="section-title">{t('home.upcomingVaccinations')}</h2>
+          <section className="mt-4 px-4">
+            <div className="flex justify-between items-center mb-3">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">{t('home.upcomingVaccinations')}</h2>
               <button 
-                className="section-link"
+                className="text-2xl font-light text-blue-500 px-2 hover:opacity-80"
                 onClick={() => navigate('/vaccination')}
               >
                 ›
               </button>
             </div>
 
-            {upcomingVaccinations.map((vaccination) => (
-              <div key={vaccination.id} className="list-item card">
-                <div className="list-item-header">
-                  <p className="list-item-title">
-                    💉 {vaccination.vaccineName}
+            <div className="space-y-2">
+              {upcomingVaccinations.map((vaccination) => (
+                <div key={vaccination.id} className="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm">
+                  <div className="flex justify-between items-start mb-1">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                      💉 {vaccination.vaccineName}
+                    </p>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      {formatDate(vaccination.nextDueDate!)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    {getPetName(vaccination.petId)}
                   </p>
-                  <span className="list-item-date">
-                    {formatDate(vaccination.nextDueDate!)}
-                  </span>
                 </div>
-                <p className="list-item-subtitle">
-                  {getPetName(vaccination.petId)}
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </section>
         )}
 
         {/* 최근 병원 기록 */}
         {recentRecords.length > 0 && (
-          <section className="section">
-            <div className="section-header">
-              <h2 className="section-title">{t('home.recentMedical')}</h2>
+          <section className="mt-4 px-4">
+            <div className="flex justify-between items-center mb-3">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">{t('home.recentMedical')}</h2>
               <button 
-                className="section-link"
+                className="text-2xl font-light text-blue-500 px-2 hover:opacity-80"
                 onClick={() => navigate('/medical')}
               >
                 ›
               </button>
             </div>
 
-            {recentRecords.map((record) => (
-              <div key={record.id} className="list-item card">
-                <div className="list-item-header">
-                  <p className="list-item-title">
-                    🏥 {record.hospitalName}
+            <div className="space-y-2">
+              {recentRecords.map((record) => (
+                <div key={record.id} className="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm">
+                  <div className="flex justify-between items-start mb-1">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                      🏥 {record.hospitalName}
+                    </p>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      {formatDate(record.visitDate)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    {getPetName(record.petId)} - {record.diagnosis || record.symptoms}
                   </p>
-                  <span className="list-item-date">
-                    {formatDate(record.visitDate)}
-                  </span>
                 </div>
-                <p className="list-item-subtitle">
-                  {getPetName(record.petId)} - {record.diagnosis || record.symptoms}
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </section>
         )}
       </div>

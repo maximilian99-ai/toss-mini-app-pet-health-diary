@@ -15,7 +15,6 @@ import { PetHealthStorage } from '../utils/storage';
 import { useApp } from '../contexts/AppContext';
 import { generateId } from '../shared/utils';
 import type { Pet, WeightRecord } from '../shared/types';
-import './WeightPage.css';
 
 export function WeightPage() {
   const navigate = useNavigate();
@@ -150,18 +149,18 @@ export function WeightPage() {
     const pointWidth = chartWidth / Math.max(chartRecords.length - 1, 1);
 
     return (
-      <div className="chart-container">
-        <h3 className="chart-title">{t('weight.weightTrend')}</h3>
-        <div className="chart">
-          <div className="y-axis">
-            <span className="y-axis-label">{maxWeight.toFixed(1)}</span>
-            <span className="y-axis-label">{minWeight.toFixed(1)}</span>
+      <div className="mb-6">
+        <h3 className="text-base font-bold text-gray-900 dark:text-gray-100 mb-4">{t('weight.weightTrend')}</h3>
+        <div className="bg-white dark:bg-gray-900 rounded-xl p-5 flex gap-3">
+          <div className="flex flex-col justify-between pt-2.5 pb-2.5">
+            <span className="text-xs text-gray-500 dark:text-gray-400">{maxWeight.toFixed(1)}</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">{minWeight.toFixed(1)}</span>
           </div>
-          <svg className="chart-svg" viewBox={`0 0 ${chartWidth} ${chartHeight}`}>
+          <svg className="flex-1 h-[150px]" viewBox={`0 0 ${chartWidth} ${chartHeight}`}>
             {/* 그리드 라인 */}
-            <line x1="0" y1="0" x2={chartWidth} y2="0" stroke="var(--color-border)" strokeWidth="1" />
-            <line x1="0" y1={chartHeight / 2} x2={chartWidth} y2={chartHeight / 2} stroke="var(--color-border)" strokeWidth="1" />
-            <line x1="0" y1={chartHeight} x2={chartWidth} y2={chartHeight} stroke="var(--color-border)" strokeWidth="1" />
+            <line x1="0" y1="0" x2={chartWidth} y2="0" className="stroke-gray-200 dark:stroke-gray-700" strokeWidth="1" />
+            <line x1="0" y1={chartHeight / 2} x2={chartWidth} y2={chartHeight / 2} className="stroke-gray-200 dark:stroke-gray-700" strokeWidth="1" />
+            <line x1="0" y1={chartHeight} x2={chartWidth} y2={chartHeight} className="stroke-gray-200 dark:stroke-gray-700" strokeWidth="1" />
 
             {/* 라인 연결 */}
             {chartRecords.length > 1 && (
@@ -174,7 +173,7 @@ export function WeightPage() {
                   })
                   .join(' ')}
                 fill="none"
-                stroke="var(--color-primary)"
+                className="stroke-blue-500"
                 strokeWidth="2"
               />
             )}
@@ -186,9 +185,9 @@ export function WeightPage() {
 
               return (
                 <g key={record.id}>
-                  <circle cx={x} cy={y} r="5" fill="var(--color-primary)" stroke="var(--color-surface)" strokeWidth="2" />
+                  <circle cx={x} cy={y} r="5" className="fill-blue-500 stroke-white dark:stroke-gray-900" strokeWidth="2" />
                   {index === chartRecords.length - 1 && (
-                    <text x={x} y={y - 10} textAnchor="middle" fill="var(--color-primary)" fontSize="12" fontWeight="600">
+                    <text x={x} y={y - 10} textAnchor="middle" className="fill-blue-500 text-xs font-semibold">
                       {record.weight}kg
                     </text>
                   )}
@@ -203,16 +202,20 @@ export function WeightPage() {
 
   if (pets.length === 0) {
     return (
-      <div className="weight-page">
-        <header className="header">
-          <button className="back-button" onClick={() => navigate('/')}>←</button>
-          <h1 className="title">{t('weight.title')}</h1>
-          <div className="placeholder"></div>
+      <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
+        <header className="flex-shrink-0 header-safe-top pb-3 px-5 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+          <div className="flex justify-between items-center">
+            <button className="text-2xl text-gray-900 dark:text-gray-100 hover:opacity-80 active:scale-95 transition-transform" onClick={() => navigate('/')}>
+              ←
+            </button>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white flex-1 text-center">{t('weight.title')}</h1>
+            <div className="w-6"></div>
+          </div>
         </header>
-        <div className="center-content">
-          <span className="empty-icon">🐾</span>
-          <p className="empty-text">{t('weight.noPetsTitle')}</p>
-          <button className="button-primary" onClick={() => navigate('/pet-profile')}>
+        <div className="flex flex-col items-center justify-center min-h-[60vh] p-6">
+          <span className="text-6xl mb-4">🐾</span>
+          <p className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('weight.noPetsTitle')}</p>
+          <button className="w-full py-4 px-6 bg-blue-500 text-white rounded-xl font-semibold cursor-pointer border-none mt-4" onClick={() => navigate('/pet-profile')}>
             {t('pet.register')}
           </button>
         </div>
@@ -221,39 +224,51 @@ export function WeightPage() {
   }
 
   return (
-    <div className="weight-page">
-      <header className="header">
-        <button className="back-button" onClick={() => navigate('/')}>←</button>
-        <h1 className="title">{t('weight.title')}</h1>
-        <div className="placeholder"></div>
+    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
+      <header className="flex-shrink-0 header-safe-top pb-3 px-5 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+        <div className="flex justify-between items-center">
+          <button className="text-2xl text-gray-900 dark:text-gray-100 hover:opacity-80 active:scale-95 transition-transform" onClick={() => navigate('/')}>
+            ←
+          </button>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white flex-1 text-center">{t('weight.title')}</h1>
+          <div className="w-6"></div>
+        </div>
       </header>
 
       {/* 반려동물 선택 */}
-      <div className="pet-selector-bar">
+      <div className="flex gap-2 px-3 py-3 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 overflow-x-auto">
         {pets.map((pet) => (
           <button
             key={pet.id}
-            className={`pet-tab ${selectedPet?.id === pet.id ? 'active' : ''}`}
+            className={`flex-shrink-0 flex flex-col items-center gap-1 py-2.5 px-4 bg-transparent border-none rounded-xl cursor-pointer transition-colors ${
+              selectedPet?.id === pet.id ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+            }`}
             onClick={() => setSelectedPet(pet)}
           >
-            <span className="pet-tab-emoji">
+            <span className="text-2xl">
               {pet.species === t('pet.dog') ? '🐶' : pet.species === t('pet.cat') ? '🐱' : '🐾'}
             </span>
-            <span className="pet-tab-name">{pet.name}</span>
+            <span className={`text-xs font-medium ${
+              selectedPet?.id === pet.id 
+                ? 'text-blue-500 font-semibold' 
+                : 'text-gray-500 dark:text-gray-400'
+            }`}>
+              {pet.name}
+            </span>
           </button>
         ))}
       </div>
 
-      <div className="scroll-view">
+      <div className="flex-1 overflow-y-auto px-4 py-4 pb-20">
         {/* 최신 정보 카드 */}
         {records.length > 0 && (
-          <div className="latest-card card">
-            <p className="latest-title">{t('weight.latestWeight')}</p>
-            <h2 className="latest-weight">{records[0].weight}{t('weight.kg')}</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm mb-4 text-center">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 m-0">{t('weight.latestWeight')}</p>
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2 m-0">{records[0].weight}{t('weight.kg')}</h2>
             {getWeightTrend() && (
-              <p className="latest-trend">{getWeightTrend()}</p>
+              <p className="text-sm text-blue-500 font-semibold mb-2 m-0">{getWeightTrend()}</p>
             )}
-            <p className="latest-date">{formatDate(records[0].measureDate)}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 m-0">{formatDate(records[0].measureDate)}</p>
           </div>
         )}
 
@@ -261,14 +276,14 @@ export function WeightPage() {
         {renderChart()}
 
         {/* 기록 리스트 */}
-        <div className="records-section">
-          <h3 className="section-title">{t('weight.records')}</h3>
+        <div className="mt-6">
+          <h3 className="text-base font-bold text-gray-900 dark:text-gray-100 mb-3 m-0">{t('weight.records')}</h3>
 
           {records.length === 0 ? (
-            <div className="empty-card card">
-              <span className="empty-icon">⚖️</span>
-              <p className="empty-text">{t('weight.emptyTitle')}</p>
-              <p className="empty-subtext">{t('weight.emptySubtitle')}</p>
+            <div className="bg-white dark:bg-gray-900 rounded-xl p-10 shadow-sm flex flex-col items-center text-center">
+              <span className="text-6xl mb-4">⚖️</span>
+              <p className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 m-0">{t('weight.emptyTitle')}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 m-0">{t('weight.emptySubtitle')}</p>
             </div>
           ) : (
             records.map((record, index) => {
@@ -278,27 +293,31 @@ export function WeightPage() {
               }
 
               return (
-                <div key={record.id} className="record-card card">
-                  <div className="record-header">
-                    <span className="record-weight">{record.weight}{t('weight.kg')}</span>
+                <div key={record.id} className="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm mb-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xl font-bold text-gray-900 dark:text-gray-100">{record.weight}{t('weight.kg')}</span>
                     {diff !== null && diff !== 0 && (
-                      <span className={`record-diff ${diff > 0 ? 'diff-up' : 'diff-down'}`}>
+                      <span className={`text-xs font-semibold py-1 px-2 rounded-lg ${
+                        diff > 0 
+                          ? 'bg-red-50 dark:bg-red-900/20 text-red-500' 
+                          : 'bg-blue-50 dark:bg-blue-900/20 text-blue-500'
+                      }`}>
                         {diff > 0 ? '↑' : '↓'} {Math.abs(diff).toFixed(1)}{t('weight.kg')}
                       </span>
                     )}
                   </div>
 
-                  <p className="record-date">{formatDate(record.measureDate)}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 m-0">{formatDate(record.measureDate)}</p>
 
                   {record.notes && (
-                    <p className="record-notes">{record.notes}</p>
+                    <p className="text-sm text-gray-900 dark:text-gray-100 mb-3 pt-3 border-t border-gray-200 dark:border-gray-800 m-0">{record.notes}</p>
                   )}
 
-                  <div className="record-actions">
-                    <button className="button-secondary" onClick={() => openModal(record)}>
+                  <div className="flex gap-2 pt-3 border-t border-gray-200 dark:border-gray-800">
+                    <button className="flex-1 py-2.5 px-4 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-none rounded-lg text-sm font-semibold cursor-pointer" onClick={() => openModal(record)}>
                       {t('common.edit')}
                     </button>
-                    <button className="button-ghost" onClick={() => handleDelete(record)}>
+                    <button className="flex-1 py-2.5 px-4 bg-transparent text-red-500 border border-red-500 rounded-lg text-sm font-semibold cursor-pointer" onClick={() => handleDelete(record)}>
                       {t('common.delete')}
                     </button>
                   </div>
@@ -309,51 +328,51 @@ export function WeightPage() {
         </div>
       </div>
 
-      <footer className="footer">
-        <button className="button-primary" onClick={() => openModal()}>
+      <footer className="fixed bottom-0 left-0 right-0 p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 max-w-[480px] mx-auto">
+        <button className="w-full py-4 px-6 bg-blue-500 text-white rounded-xl font-semibold cursor-pointer border-none" onClick={() => openModal()}>
           {t('weight.addButton')}
         </button>
       </footer>
 
       {/* 추가/수정 모달 */}
       {modalVisible && (
-        <div className="modal-overlay" onClick={() => setModalVisible(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <button className="modal-close" onClick={() => setModalVisible(false)}>✕</button>
-              <h2 className="modal-title">
+        <div className="fixed inset-0 bg-black/50 flex items-end z-50 animate-fadeIn" onClick={() => setModalVisible(false)}>
+          <div className="w-full max-h-[90vh] bg-white dark:bg-gray-900 rounded-t-2xl animate-slideUp overflow-hidden flex flex-col md:max-w-[480px] md:mx-auto md:items-center md:rounded-2xl md:max-h-[80vh]" onClick={(e) => e.stopPropagation()}>
+            <div className="px-5 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between flex-shrink-0">
+              <button className="bg-transparent border-none text-2xl text-gray-900 dark:text-gray-100 cursor-pointer p-2" onClick={() => setModalVisible(false)}>✕</button>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 m-0 flex-1 text-center">
                 {editingRecord ? t('weight.edit') : t('weight.add')}
               </h2>
-              <div className="placeholder"></div>
+              <div className="w-10"></div>
             </div>
 
-            <div className="modal-body">
-              <div className="form-group">
-                <label className="label">{t('weight.weight')} * ({t('weight.kg')})</label>
+            <div className="p-5 overflow-y-auto flex-1">
+              <div className="mb-5">
+                <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('weight.weight')} * ({t('weight.kg')})</label>
                 <input
                   type="number"
                   step="0.1"
-                  className="input"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-base text-gray-900 dark:text-gray-100 focus:outline-none focus:border-blue-500"
                   value={weight}
                   onChange={(e) => setWeight(e.target.value)}
                   placeholder="0.0"
                 />
               </div>
 
-              <div className="form-group">
-                <label className="label">{t('weight.measureDate')} *</label>
+              <div className="mb-5">
+                <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('weight.measureDate')} *</label>
                 <input
                   type="date"
-                  className="input"
+                  className="w-full h-12 px-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-base text-gray-900 dark:text-gray-100 appearance-none focus:outline-none focus:border-blue-500"
                   value={measureDate}
                   onChange={(e) => setMeasureDate(e.target.value)}
                 />
               </div>
 
-              <div className="form-group">
-                <label className="label">{t('weight.notes')}</label>
+              <div className="mb-5">
+                <label className="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('weight.notes')}</label>
                 <textarea
-                  className="input text-area"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-base text-gray-900 dark:text-gray-100 resize-vertical min-h-[100px] focus:outline-none focus:border-blue-500"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder={t('weight.notesPlaceholder')}
@@ -361,7 +380,7 @@ export function WeightPage() {
                 />
               </div>
 
-              <button className="button-primary" onClick={handleSave}>
+              <button className="w-full py-4 px-6 bg-blue-500 text-white rounded-xl font-semibold cursor-pointer border-none" onClick={handleSave}>
                 {t('common.save')}
               </button>
             </div>

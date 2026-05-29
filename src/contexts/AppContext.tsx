@@ -57,6 +57,13 @@ export function AppProvider({ children }: AppProviderProps) {
   useEffect(() => {
     applyTheme(theme);
     document.documentElement.setAttribute('data-theme', theme);
+    
+    // TailwindCSS 다크모드를 위한 클래스 추가/제거
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   }, [theme]);
 
   // 앱 시작 시 저장된 설정 불러오기
