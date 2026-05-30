@@ -57,6 +57,9 @@
     "other": "Khác",
     "months": "tháng",
     "years": "năm",
+    "ageMonthsOnly": "{{count}} tháng",
+    "ageYearsOnly": "{{count}} năm",
+    "ageYearsMonths": "{{years}} năm {{months}} tháng",
     "kg": "kg",
     "alert": {
       "title": "Thông báo",

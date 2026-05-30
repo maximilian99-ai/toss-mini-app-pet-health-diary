@@ -57,6 +57,9 @@
     "other": "기타",
     "months": "개월",
     "years": "년",
+    "ageMonthsOnly": "{{count}}개월",
+    "ageYearsOnly": "{{count}}년",
+    "ageYearsMonths": "{{years}}년 {{months}}개월",
     "kg": "kg",
     "alert": {
       "title": "알림",

@@ -57,6 +57,9 @@
     "other": "อื่นๆ",
     "months": "เดือน",
     "years": "ปี",
+    "ageMonthsOnly": "{{count}} เดือน",
+    "ageYearsOnly": "{{count}} ปี",
+    "ageYearsMonths": "{{years}} ปี {{months}} เดือน",
     "kg": "kg",
     "alert": {
       "title": "แจ้งเตือน",

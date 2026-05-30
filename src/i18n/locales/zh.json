@@ -57,6 +57,9 @@
     "other": "其他",
     "months": "个月",
     "years": "岁",
+    "ageMonthsOnly": "{{count}}个月",
+    "ageYearsOnly": "{{count}}岁",
+    "ageYearsMonths": "{{years}}岁{{months}}个月",
     "kg": "kg",
     "alert": {
       "title": "提示",

@@ -57,6 +57,9 @@
     "other": "Other",
     "months": "months",
     "years": "years",
+    "ageMonthsOnly": "{{count}} months",
+    "ageYearsOnly": "{{count}} years",
+    "ageYearsMonths": "{{years}} years {{months}} months",
     "kg": "kg",
     "alert": {
       "title": "Notice",

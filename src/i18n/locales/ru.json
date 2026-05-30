@@ -57,6 +57,9 @@
     "other": "Другое",
     "months": "мес.",
     "years": "лет",
+    "ageMonthsOnly": "{{count}} мес.",
+    "ageYearsOnly": "{{count}} лет",
+    "ageYearsMonths": "{{years}} лет {{months}} мес.",
     "kg": "кг",
     "alert": {
       "title": "Уведомление",

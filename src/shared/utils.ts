@@ -4,6 +4,18 @@
  * 유틸리티 함수
  */
 
+import i18n from '../i18n';
+
+/** i18n 언어 코드 → Intl 로케일 코드 매핑 */
+const LOCALE_MAP: Record<string, string> = {
+  ko: 'ko-KR',
+  en: 'en-US',
+  ru: 'ru-RU',
+  vi: 'vi-VN',
+  zh: 'zh-CN',
+  th: 'th-TH',
+};
+
 /**
  * 날짜를 포맷팅
  * @param dateStr - ISO 날짜 문자열
@@ -11,18 +23,19 @@
  */
 export function formatDate(dateStr: string, format: 'short' | 'long' = 'short'): string {
   const date = new Date(dateStr);
-  
+  const locale = LOCALE_MAP[i18n.language] ?? 'ko-KR';
+
   if (format === 'short') {
     return `${date.getMonth() + 1}/${date.getDate()}`;
   }
   
-  return date.toLocaleDateString('ko-KR');
+  return date.toLocaleDateString(locale);
 }
 
 /**
  * 생년월일로부터 나이 계산
  * @param birthDate - 생년월일 (ISO string)
- * @returns 나이 문자열 (예: "2년 3개월")
+ * @returns 현재 언어로 포맷된 나이 문자열 (예: "2년 3개월", "2 years 3 months")
  */
 export function calculateAge(birthDate: string): string {
   const birth = new Date(birthDate);
@@ -32,11 +45,13 @@ export function calculateAge(birthDate: string): string {
     (today.getMonth() - birth.getMonth());
   
   if (ageInMonths < 12) {
-    return `${ageInMonths}개월`;
+    return i18n.t('pet.ageMonthsOnly', { count: ageInMonths });
   } else {
     const years = Math.floor(ageInMonths / 12);
     const months = ageInMonths % 12;
-    return months > 0 ? `${years}년 ${months}개월` : `${years}년`;
+    return months > 0
+      ? i18n.t('pet.ageYearsMonths', { years, months })
+      : i18n.t('pet.ageYearsOnly', { count: years });
   }
 }
 
