@@ -25,7 +25,8 @@
     "addFirstPet": "첫 번째 반려동물을 추가해보세요!",
     "noUpcoming": "예정된 예방접종이 없습니다",
     "noRecent": "최근 병원 방문 기록이 없습니다",
-    "dueDate": "예정일"
+    "dueDate": "예정일",
+    "recentWeight": "최근 체중"
   },
   "pet": {
     "title": "반려동물 프로필",

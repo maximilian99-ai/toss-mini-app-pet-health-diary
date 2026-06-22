@@ -25,7 +25,8 @@
     "addFirstPet": "Thêm thú cưng đầu tiên của bạn!",
     "noUpcoming": "Không có tiêm chủng sắp tới",
     "noRecent": "Không có lượt khám gần đây",
-    "dueDate": "Ngày"
+    "dueDate": "Ngày",
+    "recentWeight": "Cân nặng gần đây"
   },
   "pet": {
     "title": "Hồ sơ thú cưng",

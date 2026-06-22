@@ -25,7 +25,8 @@
     "addFirstPet": "Add your first pet!",
     "noUpcoming": "No upcoming vaccinations",
     "noRecent": "No recent visits",
-    "dueDate": "Due"
+    "dueDate": "Due",
+    "recentWeight": "Recent Weight"
   },
   "pet": {
     "title": "Pet Profile",

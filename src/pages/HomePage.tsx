@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PetHealthStorage } from '../utils/storage';
 import { useApp } from '../contexts/AppContext';
-import type { Pet, Vaccination, MedicalRecord } from '../shared/types';
+import type { Pet, Vaccination, MedicalRecord, WeightRecord } from '../shared/types';
 import { formatDate } from '../shared/utils';
 
 export function HomePage() {
@@ -24,6 +24,7 @@ export function HomePage() {
   const [pets, setPets] = useState<Pet[]>([]);
   const [upcomingVaccinations, setUpcomingVaccinations] = useState<Vaccination[]>([]);
   const [recentRecords, setRecentRecords] = useState<MedicalRecord[]>([]);
+  const [weightRecords, setWeightRecords] = useState<WeightRecord[]>([]);
 
   const loadData = () => {
     try {
@@ -39,6 +40,7 @@ export function HomePage() {
         )
         .slice(0, 3);
       setUpcomingVaccinations(upcoming);
+      const weightData = PetHealthStorage.getWeightRecords();
 
       // 최근 병원 기록
       const records = PetHealthStorage.getMedicalRecords();
@@ -48,6 +50,7 @@ export function HomePage() {
         )
         .slice(0, 3);
       setRecentRecords(recent);
+      setWeightRecords(weightData);
     } catch (error) {
       console.error('Error loading data:', error);
     }
@@ -218,6 +221,39 @@ export function HomePage() {
                   </div>
                   <p className="text-xs text-gray-600 dark:text-gray-400">
                     {getPetName(record.petId)} - {record.diagnosis || record.symptoms}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* 체중 기록 */}
+        {weightRecords.length > 0 && (
+          <section className="mt-4 px-4">
+            <div className="flex justify-between items-center mb-3">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">{t('home.recentWeight')}</h2>
+              <button 
+                className="text-2xl font-light text-blue-500 px-2 hover:opacity-80"
+                onClick={() => navigate('/weight')}
+              >
+                ›
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              {weightRecords.slice(0, 3).map((record) => (
+                <div key={record.id} className="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm">
+                  <div className="flex justify-between items-start mb-1">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                      ⚖️ {record.weight} kg
+                    </p>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      {formatDate(record.measureDate)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    {getPetName(record.petId)}
                   </p>
                 </div>
               ))}

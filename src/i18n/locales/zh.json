@@ -25,7 +25,8 @@
     "addFirstPet": "添加你的第一只宠物！",
     "noUpcoming": "没有即将接种的疫苗",
     "noRecent": "没有最近的就诊记录",
-    "dueDate": "日期"
+    "dueDate": "日期",
+    "recentWeight": "最近体重"
   },
   "pet": {
     "title": "宠物档案",
