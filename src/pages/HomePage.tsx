@@ -9,18 +9,16 @@
  * - 다국어 및 다크모드 지원
  */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PetHealthStorage } from '../utils/storage';
-import { useApp } from '../contexts/AppContext';
 import type { Pet, Vaccination, MedicalRecord, WeightRecord } from '../shared/types';
 import { formatDate } from '../shared/utils';
 
 export function HomePage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { theme } = useApp();
   const [pets, setPets] = useState<Pet[]>([]);
   const [upcomingVaccinations, setUpcomingVaccinations] = useState<Vaccination[]>([]);
   const [recentRecords, setRecentRecords] = useState<MedicalRecord[]>([]);
@@ -40,7 +38,6 @@ export function HomePage() {
         )
         .slice(0, 3);
       setUpcomingVaccinations(upcoming);
-      const weightData = PetHealthStorage.getWeightRecords();
 
       // 최근 병원 기록
       const records = PetHealthStorage.getMedicalRecords();
@@ -50,7 +47,14 @@ export function HomePage() {
         )
         .slice(0, 3);
       setRecentRecords(recent);
-      setWeightRecords(weightData);
+
+      // 최근 체중
+      const recentWeight = PetHealthStorage.getWeightRecords()
+        .sort((a, b) => 
+          new Date(b.measureDate).getTime() - new Date(a.measureDate).getTime()
+        )
+        .slice(0, 3);
+      setWeightRecords(recentWeight);
     } catch (error) {
       console.error('Error loading data:', error);
     }
