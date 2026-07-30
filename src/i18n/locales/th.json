@@ -13,6 +13,17 @@
     "refresh": "รีเฟรช",
     "back": "กลับ"
   },
+  "points": {
+    "title": "คะแนน",
+    "convertToToss": "แลกเป็นคะแนน Toss",
+    "modalTitle": "แลกคะแนน",
+    "modalMessage": "แลก {{points}}P เป็นคะแนน Toss?",
+    "convertSuccess": "แลกคะแนนสำเร็จ!",
+    "convertFailed": "แลกคะแนนไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
+    "noPoints": "ไม่มีคะแนนให้แลก",
+    "minPoints": "ต้องมีคะแนนอย่างน้อย {{min}} คะแนนเพื่อแลก",
+    "tapToConvert": "(แตะเพื่อแลกเป็นคะแนน Toss จริง)"
+  },
   "home": {
     "quickStart": "เริ่มด่วน",
     "profile": "โปรไฟล์",

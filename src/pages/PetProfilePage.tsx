@@ -20,7 +20,7 @@ import type { Pet } from '../shared/types';
 export function PetProfilePage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { theme } = useApp();
+  const { addPoints } = useApp();
   const [pets, setPets] = useState<Pet[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingPet, setEditingPet] = useState<Pet | null>(null);
@@ -76,6 +76,7 @@ export function PetProfilePage() {
       return;
     }
 
+    const isNewPet = !editingPet;
     const now = new Date().toISOString();
     const pet: Pet = {
       id: editingPet?.id || generateId('pet'),
@@ -94,6 +95,11 @@ export function PetProfilePage() {
     loadPets();
     setModalVisible(false);
     resetForm();
+
+    // 새로운 프로필 추가 시 포인트 증가
+    if (isNewPet) {
+      addPoints(1);
+    }
   };
 
   const handleDelete = (pet: Pet) => {

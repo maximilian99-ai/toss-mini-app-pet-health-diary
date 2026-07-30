@@ -10,15 +10,19 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { applyTheme, getSystemTheme } from '../shared/theme';
-import { THEME_MODE_KEY, LANGUAGE_KEY } from '../shared/constants';
+import { THEME_MODE_KEY, LANGUAGE_KEY, POINTS_KEY } from '../shared/constants';
+import { PetHealthStorage } from '../utils/storage';
 import type { ThemeMode, Theme, Language } from '../shared/types';
 
 interface AppContextType {
   theme: Theme;
   themeMode: ThemeMode;
   language: Language;
+  points: number;
   setThemeMode: (mode: ThemeMode) => void;
   setLanguage: (lang: Language) => void;
+  addPoints: (amount: number) => void;
+  resetPoints: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -38,6 +42,7 @@ export function AppProvider({ children }: AppProviderProps) {
   const [themeMode, setThemeModeState] = useState<ThemeMode>('auto');
   const [language, setLanguageState] = useState<Language>('ko');
   const [systemTheme, setSystemTheme] = useState<Theme>(getSystemTheme());
+  const [points, setPoints] = useState<number>(0);
 
   // 실제 적용되는 테마 계산
   const theme: Theme = themeMode === 'auto' ? systemTheme : themeMode;
@@ -79,6 +84,7 @@ export function AppProvider({ children }: AppProviderProps) {
     try {
       const savedThemeMode = localStorage.getItem(THEME_MODE_KEY);
       const savedLanguage = localStorage.getItem(LANGUAGE_KEY);
+      const savedPoints = localStorage.getItem(POINTS_KEY);
 
       // 테마: localStorage에 저장된 값이 있으면 사용, 없으면 'auto' (디바이스 설정 따름)
       if (savedThemeMode) {
@@ -95,8 +101,34 @@ export function AppProvider({ children }: AppProviderProps) {
         const browserLang = i18n.language as Language;
         setLanguageState(browserLang);
       }
+
+      // 포인트: localStorage에 저장된 값이 있으면 사용, 없으면 기존 데이터 개수로 초기화
+      if (savedPoints) {
+        setPoints(parseInt(savedPoints, 10));
+      } else {
+        initializePoints();
+      }
     } catch (error) {
       console.error('Error loading settings:', error);
+    }
+  };
+
+  /**
+   * 기존 데이터 개수만큼 포인트 초기화
+   */
+  const initializePoints = () => {
+    try {
+      const pets = PetHealthStorage.getPets();
+      const vaccinations = PetHealthStorage.getVaccinations();
+      const medicalRecords = PetHealthStorage.getMedicalRecords();
+      const weightRecords = PetHealthStorage.getWeightRecords();
+
+      const totalPoints = pets.length + vaccinations.length + medicalRecords.length + weightRecords.length;
+      setPoints(totalPoints);
+      localStorage.setItem(POINTS_KEY, totalPoints.toString());
+      console.log('[Points] Initialized with', totalPoints, 'points');
+    } catch (error) {
+      console.error('Error initializing points:', error);
     }
   };
 
@@ -125,8 +157,37 @@ export function AppProvider({ children }: AppProviderProps) {
     }
   };
 
+  /**
+   * 포인트 증가
+   */
+  const addPoints = (amount: number) => {
+    setPoints((prevPoints) => {
+      const newPoints = prevPoints + amount;
+      try {
+        localStorage.setItem(POINTS_KEY, newPoints.toString());
+        console.log('[Points] Added', amount, '→ Total:', newPoints);
+      } catch (error) {
+        console.error('Error saving points:', error);
+      }
+      return newPoints;
+    });
+  };
+
+  /**
+   * 포인트 리셋
+   */
+  const resetPoints = () => {
+    setPoints(0);
+    try {
+      localStorage.setItem(POINTS_KEY, '0');
+      console.log('[Points] Reset to 0');
+    } catch (error) {
+      console.error('Error resetting points:', error);
+    }
+  };
+
   return (
-    <AppContext.Provider value={{ theme, themeMode, language, setThemeMode, setLanguage }}>
+    <AppContext.Provider value={{ theme, themeMode, language, points, setThemeMode, setLanguage, addPoints, resetPoints }}>
       {children}
     </AppContext.Provider>
   );

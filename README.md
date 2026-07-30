@@ -110,6 +110,65 @@ docs/skills/           # 프로젝트 문서
 - **인앱 광고**: 전면 광고 (Fullscreen Ad) 지원
 - **인앱 결제**: 상품 목록 조회 및 결제 처리
 
+### 🪙 포인트 시스템 & 토스 프로모션
+- **포인트 적립**: 데이터 추가 시 1P 자동 적립
+  - 반려동물 프로필 등록: +1P
+  - 예방접종 기록 추가: +1P
+  - 병원 방문 기록 추가: +1P
+  - 체중 기록 추가: +1P
+- **토스 포인트 전환**: 적립된 포인트를 실제 토스 포인트로 전환
+- **자동 초기화**: 앱 최초 실행 시 기존 데이터 개수만큼 포인트 자동 지급
+- **영구 저장**: localStorage를 통한 포인트 영구 보관
+
+#### 토스 프로모션 연동 설정
+
+포인트를 실제 토스 포인트로 전환하려면 앱인토스 콘솔에서 프로모션을 설정해야 합니다:
+
+1. **앱인토스 콘솔 접속**
+   - [앱인토스 콘솔](https://console.apps-in-toss.im/) 로그인
+   
+2. **프로모션 생성**
+   - 좌측 메뉴: 성장 > 프로모션(토스 포인트)
+   - "프로모션 만들기" 클릭
+   - 프로모션 정보 입력:
+     - 프로모션 이름: "펫 건강 다이어리 포인트 전환"
+     - 액션 유형: REWARD
+     - 포인트 지급 방식 설정
+   
+3. **Promotion ID 설정**
+   - 생성된 프로모션의 ID 복사
+   - `src/shared/constants.ts` 파일 수정:
+   ```typescript
+   export const PROMOTION_ID = '발급받은_프로모션_ID';
+   ```
+
+4. **API 연동 코드 활성화**
+   - `src/pages/HomePage.tsx` 파일에서 TODO 주석 확인
+   - 주석 처리된 프로모션 API 코드 활성화:
+   ```typescript
+   import { executePromotion } from '@apps-in-toss/web-framework';
+   
+   const result = await executePromotion({
+     promotionId: PROMOTION_ID,
+     actionType: 'REWARD',
+     metadata: {
+       points: points,
+       timestamp: new Date().toISOString(),
+       source: 'pet_health_diary',
+     },
+   });
+   ```
+
+5. **테스트**
+   - 샌드박스 앱 또는 토스 앱에서 실행 (브라우저 X)
+   - 포인트 적립 후 전환 기능 테스트
+
+**참고 문서**:
+- [프로모션(토스 포인트) 이해하기](https://developers-apps-in-toss.toss.im/promotion/intro.md)
+- [프로모션 콘솔 가이드](https://developers-apps-in-toss.toss.im/promotion/console.md)
+- [프로모션 개발 가이드](https://developers-apps-in-toss.toss.im/promotion/develop.md)
+- [비게임 프로모션 API](https://developers-apps-in-toss.toss.im/bedrock/reference/framework/비게임/promotion.md)
+
 ### 💾 데이터 관리
 - localStorage 기반 데이터 저장
 - JSON 내보내기/가져오기 기능

@@ -19,7 +19,7 @@ import type { Pet, WeightRecord } from '../shared/types';
 export function WeightPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { theme } = useApp();
+  const { addPoints } = useApp();
   const [pets, setPets] = useState<Pet[]>([]);
   const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
   const [records, setRecords] = useState<WeightRecord[]>([]);
@@ -91,6 +91,7 @@ export function WeightPage() {
       return;
     }
 
+    const isNewRecord = !editingRecord;
     const now = new Date().toISOString();
     const record: WeightRecord = {
       id: editingRecord?.id || generateId('weight'),
@@ -105,6 +106,11 @@ export function WeightPage() {
     loadRecords(selectedPet.id);
     setModalVisible(false);
     resetForm();
+
+    // 새로운 체중 기록 추가 시 포인트 증가
+    if (isNewRecord) {
+      addPoints(1);
+    }
   };
 
   const handleDelete = (record: WeightRecord) => {

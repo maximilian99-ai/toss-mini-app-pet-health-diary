@@ -13,6 +13,17 @@
     "refresh": "Refresh",
     "back": "Back"
   },
+  "points": {
+    "title": "Points",
+    "convertToToss": "Convert to Toss Points",
+    "modalTitle": "Convert Points",
+    "modalMessage": "Convert {{points}}P to Toss Points?",
+    "convertSuccess": "Points converted successfully!",
+    "convertFailed": "Failed to convert points. Please try again.",
+    "noPoints": "No points to convert.",
+    "minPoints": "Minimum {{min}} points required for conversion.",
+    "tapToConvert": "(Tap to convert to real Toss Points)"
+  },
   "home": {
     "quickStart": "Quick Start",
     "profile": "Profile",

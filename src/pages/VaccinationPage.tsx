@@ -19,7 +19,7 @@ import type { Pet, Vaccination } from '../shared/types';
 export function VaccinationPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { theme } = useApp();
+  const { addPoints } = useApp();
   const [pets, setPets] = useState<Pet[]>([]);
   const [vaccinations, setVaccinations] = useState<Vaccination[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -87,6 +87,7 @@ export function VaccinationPage() {
       return;
     }
 
+    const isNewVaccination = !editingVaccination;
     const now = new Date().toISOString();
     const vaccination: Vaccination = {
       id: editingVaccination?.id || generateId('vaccination'),
@@ -104,6 +105,11 @@ export function VaccinationPage() {
     loadData();
     setModalVisible(false);
     resetForm();
+
+    // 새로운 예방접종 추가 시 포인트 증가
+    if (isNewVaccination) {
+      addPoints(1);
+    }
   };
 
   const handleDelete = (vaccination: Vaccination) => {

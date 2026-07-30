@@ -13,6 +13,17 @@
     "refresh": "刷新",
     "back": "返回"
   },
+  "points": {
+    "title": "积分",
+    "convertToToss": "兑换为Toss积分",
+    "modalTitle": "兑换积分",
+    "modalMessage": "将{{points}}P兑换为Toss积分？",
+    "convertSuccess": "积分兑换成功！",
+    "convertFailed": "积分兑换失败，请重试。",
+    "noPoints": "没有可兑换的积分。",
+    "minPoints": "需要至少{{min}}积分才能兑换。",
+    "tapToConvert": "(点击以兑换为真实Toss积分)"
+  },
   "home": {
     "quickStart": "快速开始",
     "profile": "档案",

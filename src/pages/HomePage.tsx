@@ -13,16 +13,22 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PetHealthStorage } from '../utils/storage';
+import { useApp } from '../contexts/AppContext';
 import type { Pet, Vaccination, MedicalRecord, WeightRecord } from '../shared/types';
 import { formatDate } from '../shared/utils';
+import { PROMOTION_ID, MIN_CONVERT_POINTS } from '../shared/constants';
+import { grantPromotionReward } from '@apps-in-toss/web-framework';
 
 export function HomePage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { points, resetPoints } = useApp();
   const [pets, setPets] = useState<Pet[]>([]);
   const [upcomingVaccinations, setUpcomingVaccinations] = useState<Vaccination[]>([]);
   const [recentRecords, setRecentRecords] = useState<MedicalRecord[]>([]);
   const [weightRecords, setWeightRecords] = useState<WeightRecord[]>([]);
+  const [showConvertModal, setShowConvertModal] = useState(false);
+  const [isConverting, setIsConverting] = useState(false);
 
   const loadData = () => {
     try {
@@ -69,11 +75,82 @@ export function HomePage() {
     return pet?.name || t('common.unknown');
   };
 
+  const handleConvertPoints = () => {
+    if (points === 0) {
+      alert(t('points.noPoints'));
+      return;
+    }
+    if (points < MIN_CONVERT_POINTS) {
+      alert(t('points.minPoints', { min: MIN_CONVERT_POINTS }));
+      return;
+    }
+    setShowConvertModal(true);
+  };
+
+  const handleConfirmConvert = async () => {
+    setIsConverting(true);
+
+    try {
+      // 토스 프로모션 API 실제 연동
+      // 참고: https://developers-apps-in-toss.toss.im/bedrock/reference/framework/비게임/promotion.md
+      console.log('[Points] 토스 프로모션 API 호출 시작');
+      console.log('[Points] 전환 포인트:', points);
+      console.log('[Points] Promotion ID:', PROMOTION_ID);
+      
+      // 비게임용 프로모션 리워드 API 호출
+      const result = await grantPromotionReward({
+        params: {
+          promotionCode: PROMOTION_ID,
+          amount: points,
+        },
+      });
+
+      // 성공 처리 - "ERROR" 문자열이 아니면 성공
+      if (result !== 'ERROR') {
+        resetPoints();
+        setShowConvertModal(false);
+        alert(t('points.convertSuccess'));
+        console.log('[Points] 토스 포인트 전환 성공:', result);
+      } else {
+        throw new Error('포인트 전환 실패');
+      }
+    } catch (error) {
+      console.error('[Points] 토스 포인트 전환 실패:', error);
+      
+      // 에러 메시지 처리
+      let errorMessage = t('points.convertFailed');
+      
+      if (error instanceof Error) {
+        const message = error.message || '';
+        
+        if (message.includes('PROMOTION_NOT_FOUND') || message.includes('promotionCode') || message.includes('promotionId')) {
+          errorMessage += '\n\n앱인토스 콘솔에서 프로모션을 먼저 생성해주세요.\n콘솔: https://console.apps-in-toss.im/';
+        } else if (message.includes('NOT_SUPPORTED') || message.includes('isSupported') || message.includes('not supported')) {
+          errorMessage += '\n\n브라우저가 아닌 토스 앱/샌드박스 앱에서 실행해주세요.';
+        } else if (message.includes('INSUFFICIENT') || message.includes('budget')) {
+          errorMessage += '\n\n프로모션 예산이 부족합니다. 콘솔에서 확인해주세요.';
+        } else if (message.includes('EXPIRED')) {
+          errorMessage += '\n\n프로모션 기간이 만료되었습니다.';
+        } else {
+          errorMessage += `\n\n상세: ${message}`;
+        }
+      }
+      
+      alert(errorMessage);
+    } finally {
+      setIsConverting(false);
+    }
+  };
+
+  const handleCancelConvert = () => {
+    setShowConvertModal(false);
+  };
+
   return (
     <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-950 overflow-hidden">
       {/* 헤더 */}
       <header className="flex-shrink-0 header-safe-top pb-3 px-5 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mb-2">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('app.title')}</h1>
           <button 
             className="p-2 text-2xl hover:scale-110 transition-transform active:scale-95"
@@ -82,6 +159,18 @@ export function HomePage() {
             ⚙️
           </button>
         </div>
+        <button 
+          onClick={handleConvertPoints}
+          className="w-full flex flex-col items-center justify-center gap-1 px-3 py-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 active:scale-95 transition-all"
+        >
+          <span className="text-xl">🪙</span>
+          <span className="text-sm font-semibold text-gray-900 dark:text-white">
+            {points.toLocaleString()} P
+          </span>
+          <span className="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">
+            {t('points.tapToConvert')}
+          </span>
+        </button>
       </header>
 
       <div className="flex-1 overflow-y-auto pb-6 custom-scrollbar">
@@ -265,6 +354,46 @@ export function HomePage() {
           </section>
         )}
       </div>
+
+      {/* 포인트 전환 모달 */}
+      {showConvertModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 max-w-sm w-full shadow-xl">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3 text-center">
+              {t('points.modalTitle')}
+            </h2>
+            <p className="text-center text-gray-600 dark:text-gray-400 mb-6">
+              {t('points.modalMessage', { points: points.toLocaleString() })}
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={handleCancelConvert}
+                disabled={isConverting}
+                className="flex-1 py-3 px-4 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white font-semibold rounded-xl hover:bg-gray-300 dark:hover:bg-gray-700 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {t('common.cancel')}
+              </button>
+              <button
+                onClick={handleConfirmConvert}
+                disabled={isConverting}
+                className="flex-1 py-3 px-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {isConverting ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>전환 중...</span>
+                  </>
+                ) : (
+                  t('common.confirm')
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

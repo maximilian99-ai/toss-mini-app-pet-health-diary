@@ -18,7 +18,7 @@ import type { Pet, MedicalRecord } from '../shared/types';
 export function MedicalPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { theme } = useApp();
+  const { addPoints } = useApp();
   const [pets, setPets] = useState<Pet[]>([]);
   const [records, setRecords] = useState<MedicalRecord[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -92,6 +92,7 @@ export function MedicalPage() {
       return;
     }
 
+    const isNewRecord = !editingRecord;
     const now = new Date().toISOString();
     const record: MedicalRecord = {
       id: editingRecord?.id || generateId('medical'),
@@ -111,6 +112,11 @@ export function MedicalPage() {
     loadData();
     setModalVisible(false);
     resetForm();
+
+    // 새로운 병원 기록 추가 시 포인트 증가
+    if (isNewRecord) {
+      addPoints(1);
+    }
   };
 
   const handleDelete = (record: MedicalRecord) => {

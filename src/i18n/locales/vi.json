@@ -13,6 +13,17 @@
     "refresh": "Làm mới",
     "back": "Quay lại"
   },
+  "points": {
+    "title": "Điểm",
+    "convertToToss": "Chuyển đổi sang điểm Toss",
+    "modalTitle": "Chuyển đổi điểm",
+    "modalMessage": "Chuyển đổi {{points}}P sang điểm Toss?",
+    "convertSuccess": "Chuyển đổi điểm thành công!",
+    "convertFailed": "Không thể chuyển đổi điểm. Vui lòng thử lại.",
+    "noPoints": "Không có điểm để chuyển đổi.",
+    "minPoints": "Cần tối thiểu {{min}} điểm để chuyển đổi.",
+    "tapToConvert": "(Chạm để chuyển đổi sang điểm Toss thực)"
+  },
   "home": {
     "quickStart": "Bắt đầu nhanh",
     "profile": "Hồ sơ",
