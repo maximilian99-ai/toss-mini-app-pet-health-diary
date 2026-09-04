@@ -22,7 +22,7 @@
     "convertFailed": "Failed to convert points. Please try again.",
     "noPoints": "No points to convert.",
     "minPoints": "Minimum {{min}} points required for conversion.",
-    "tapToConvert": "(Tap to convert to real Toss Points)"
+    "tapToConvert": "(The Toss Points conversion feature is under development. Please wait for future updates.)"
   },
   "home": {
     "quickStart": "Quick Start",

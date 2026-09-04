@@ -22,7 +22,7 @@
     "convertFailed": "积分兑换失败，请重试。",
     "noPoints": "没有可兑换的积分。",
     "minPoints": "需要至少{{min}}积分才能兑换。",
-    "tapToConvert": "(点击以兑换为真实Toss积分)"
+    "tapToConvert": "(Toss积分兑换功能正在开发中，请等待未来的更新。)"
   },
   "home": {
     "quickStart": "快速开始",

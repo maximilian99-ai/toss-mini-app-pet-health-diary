@@ -22,7 +22,7 @@
     "convertFailed": "Không thể chuyển đổi điểm. Vui lòng thử lại.",
     "noPoints": "Không có điểm để chuyển đổi.",
     "minPoints": "Cần tối thiểu {{min}} điểm để chuyển đổi.",
-    "tapToConvert": "(Chạm để chuyển đổi sang điểm Toss thực)"
+    "tapToConvert": "(Tính năng chuyển đổi điểm Toss đang được phát triển. Vui lòng chờ cập nhật trong tương lai.)"
   },
   "home": {
     "quickStart": "Bắt đầu nhanh",
