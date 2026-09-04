@@ -88,6 +88,11 @@ export function HomePage() {
   };
 
   const handleConfirmConvert = async () => {
+    if (!PROMOTION_ID || PROMOTION_ID === 'YOUR_PROMOTION_ID') {
+      alert('프로모션 코드가 설정되지 않았습니다. constants.ts의 PROMOTION_ID를 실제 코드로 변경해주세요.');
+      return;
+    }
+
     setIsConverting(true);
 
     try {
@@ -105,14 +110,25 @@ export function HomePage() {
         },
       });
 
-      // 성공 처리 - "ERROR" 문자열이 아니면 성공
-      if (result !== 'ERROR') {
+      if (!result) {
+        throw new Error('NOT_SUPPORTED_APP_VERSION');
+      }
+
+      if (result === 'ERROR') {
+        throw new Error('UNKNOWN_ERROR');
+      }
+
+      if ('errorCode' in result) {
+        throw new Error(`PROMOTION_ERROR_${result.errorCode}:${result.message}`);
+      }
+
+      if ('key' in result) {
         resetPoints();
         setShowConvertModal(false);
         alert(t('points.convertSuccess'));
-        console.log('[Points] 토스 포인트 전환 성공:', result);
+        console.log('[Points] 토스 포인트 전환 성공. rewardKey:', result.key);
       } else {
-        throw new Error('포인트 전환 실패');
+        throw new Error('INVALID_RESPONSE_SHAPE');
       }
     } catch (error) {
       console.error('[Points] 토스 포인트 전환 실패:', error);
@@ -122,15 +138,31 @@ export function HomePage() {
       
       if (error instanceof Error) {
         const message = error.message || '';
-        
-        if (message.includes('PROMOTION_NOT_FOUND') || message.includes('promotionCode') || message.includes('promotionId')) {
-          errorMessage += '\n\n앱인토스 콘솔에서 프로모션을 먼저 생성해주세요.\n콘솔: https://console.apps-in-toss.im/';
+
+        if (message.includes('NOT_SUPPORTED_APP_VERSION')) {
+          errorMessage += '\n\n토스 앱 버전이 낮아서 지원되지 않습니다. 토스 앱 업데이트 후 다시 시도해주세요.';
+        } else if (message.includes('PROMOTION_ERROR_4100')) {
+          errorMessage += '\n\n프로모션 코드를 찾을 수 없습니다. 콘솔에서 코드와 활성 상태를 확인해주세요.';
+        } else if (message.includes('PROMOTION_ERROR_4104')) {
+          errorMessage += '\n\n프로모션이 중지되어 있습니다. 콘솔에서 다시 시작해주세요.';
+        } else if (message.includes('PROMOTION_ERROR_4105')) {
+          errorMessage += '\n\n프로모션이 종료되었습니다. 기간을 확인해주세요.';
+        } else if (message.includes('PROMOTION_ERROR_4108')) {
+          errorMessage += '\n\n프로모션이 승인되지 않았습니다. 콘솔 상태를 확인해주세요.';
+        } else if (message.includes('PROMOTION_ERROR_4109')) {
+          errorMessage += '\n\n프로모션이 실행 중이 아닙니다. 콘솔에서 실행 상태를 확인해주세요.';
+        } else if (message.includes('PROMOTION_ERROR_4110')) {
+          errorMessage += '\n\n리워드 지급/회수가 불가능한 상태입니다. 콘솔 설정을 확인해주세요.';
+        } else if (message.includes('PROMOTION_ERROR_4112')) {
+          errorMessage += '\n\n프로모션 예산이 부족합니다. 콘솔에서 예산을 충전해주세요.';
+        } else if (message.includes('PROMOTION_ERROR_4113')) {
+          errorMessage += '\n\n이미 처리된 지급 요청입니다. 중복 요청 여부를 확인해주세요.';
+        } else if (message.includes('PROMOTION_ERROR_4114')) {
+          errorMessage += '\n\n1회 지급 한도를 초과했습니다. 프로모션 최대 지급 금액을 확인해주세요.';
         } else if (message.includes('NOT_SUPPORTED') || message.includes('isSupported') || message.includes('not supported')) {
           errorMessage += '\n\n브라우저가 아닌 토스 앱/샌드박스 앱에서 실행해주세요.';
-        } else if (message.includes('INSUFFICIENT') || message.includes('budget')) {
-          errorMessage += '\n\n프로모션 예산이 부족합니다. 콘솔에서 확인해주세요.';
-        } else if (message.includes('EXPIRED')) {
-          errorMessage += '\n\n프로모션 기간이 만료되었습니다.';
+        } else if (message.includes('PROMOTION_NOT_FOUND') || message.includes('promotionCode') || message.includes('promotionId')) {
+          errorMessage += '\n\n앱인토스 콘솔에서 프로모션을 먼저 생성해주세요.\n콘솔: https://console.apps-in-toss.im/';
         } else {
           errorMessage += `\n\n상세: ${message}`;
         }

@@ -1,318 +1,221 @@
-# 🐾 Pet Health Diary
+# Pet Health Diary
 
-반려동물의 건강 정보를 체계적으로 관리할 수 있는 Apps in Toss 미니앱입니다.
+반려동물 건강 기록을 관리하는 Apps in Toss 미니앱입니다.
 
-## 📖 프로젝트 소개
+## 프로젝트 개요
 
-반려동물의 프로필, 예방접종 일정, 병원 방문 기록, 체중 변화 등을 간편하게 기록하고 관리할 수 있는 건강 다이어리 애플리케이션입니다.
+Pet Health Diary는 반려동물의 기본 정보, 예방접종, 병원 방문, 체중 변화를 한 곳에서 기록하고 조회할 수 있는 앱입니다.
 
-## 🛠 기술 스택
+현재 앱은 React + TypeScript 기반으로 구현되어 있으며, 데이터는 localStorage에 저장됩니다.
 
-### 프레임워크 & 라이브러리
-- **React 18.3** - UI 라이브러리
-- **TypeScript 5.7** - 타입 안정성
-- **Vite 6.2** - 빌드 도구 및 개발 서버
-- **React Router DOM 7.15** - 클라이언트 사이드 라우팅
+## 현재 동작하는 기능 (2026-09-05 기준)
+
+아래 기능은 현재 라우트와 화면에서 실제로 사용 가능합니다.
+
+### 1) 홈 대시보드
+- 반려동물 카드 목록 표시
+- 빠른 이동 버튼
+  - 프로필
+  - 예방접종
+  - 병원 기록
+  - 체중 기록
+- 다가오는 예방접종 최대 3개 표시
+- 최근 병원 기록 최대 3개 표시
+- 최근 체중 기록 최대 3개 표시
+- 현재 포인트 표시 및 포인트 전환 버튼
+
+### 2) 반려동물 프로필 관리
+- 반려동물 추가/수정/삭제
+- 입력 항목
+  - 이름(필수)
+  - 종류
+  - 품종
+  - 성별
+  - 생년월일
+  - 체중
+  - 메모
+- 목록에서 반려동물별 요약 카드 확인
+- 새 반려동물 등록 시 포인트 +1
+- 반려동물 삭제 시 연관 데이터 cascade 삭제
+  - 예방접종
+  - 병원 기록
+  - 체중 기록
+  - 일상 메모
+
+### 3) 예방접종 관리
+- 예방접종 추가/수정/삭제
+- 입력 항목
+  - 반려동물(필수)
+  - 백신명(필수)
+  - 접종일(필수)
+  - 다음 접종일
+  - 병원명
+  - 메모
+- 목록 최신순 정렬
+- 다음 접종일 기준 배지 표시
+  - 30일 이내: 남은 일수 표시
+  - 기한 경과: overdue 표시
+- 새 예방접종 등록 시 포인트 +1
+
+### 4) 병원 기록 관리
+- 병원 기록 추가/수정/삭제
+- 입력 항목
+  - 반려동물(필수)
+  - 방문일(필수)
+  - 병원명(필수)
+  - 증상
+  - 진단
+  - 치료
+  - 비용
+  - 메모
+- 목록 최신순 정렬
+- 비용 천 단위 표시
+- 새 병원 기록 등록 시 포인트 +1
+
+### 5) 체중 기록 관리
+- 체중 기록 추가/수정/삭제
+- 반려동물별 기록 조회
+- 입력 항목
+  - 체중(필수)
+  - 측정일(필수)
+  - 메모
+- 최신 체중 카드 표시
+- 직전 기록 대비 증감 표시
+- 최근 최대 10개 기준 체중 추이 차트 표시
+- 새 체중 기록 등록 시 포인트 +1
+
+### 6) 설정
+- 언어 변경
+  - 한국어, 영어, 러시아어, 베트남어, 중국어, 태국어
+- 테마 변경
+  - Auto, Light, Dark
+- 설정값 localStorage 저장/복원
+
+### 7) 포인트 시스템
+- 앱 시작 시 기존 데이터 개수 기반 초기 포인트 자동 산정
+  - pets + vaccinations + medicalRecords + weightRecords
+- 새 데이터 추가 시 포인트 +1
+  - 반려동물
+  - 예방접종
+  - 병원 기록
+  - 체중 기록
+- 홈에서 포인트 전환 시도 가능
+- 최소 전환 포인트: 1P
+- 전환 성공 시 포인트 0으로 초기화
+
+## 포인트 전환(토스 프로모션) 사용 조건
+
+포인트 전환은 코드상 구현되어 있으나, 실제 동작을 위해 아래 조건이 필요합니다.
+
+1. Apps in Toss 콘솔에서 프로모션 생성
+2. src/shared/constants.ts의 PROMOTION_ID를 실제 값으로 교체
+3. 브라우저가 아닌 토스 앱/샌드박스 환경에서 실행
+
+기본값은 YOUR_PROMOTION_ID로 되어 있어, 교체 전에는 경고 메시지가 표시됩니다.
+
+4. 포인트 전환 기능을 도입하기 위해 [**정산 정보 단계**](https://developers-apps-in-toss.toss.im/guide/marketing/promotion#id-2)까지 진행했으며 예산 문제 때문에 향후 [**비즈니스 월렛 충전**](https://developers-apps-in-toss.toss.im/guide/marketing/promotion#id-3) 이후로 진행하여 사용자들의 리텐션을 끌어올릴 예정
+
+## 현재 코드에 있으나 기본 라우트에 연결되지 않은 항목
+
+다음 항목은 코드 파일은 존재하지만 App 라우트에 연결되어 있지 않아 현재 기본 흐름에서 접근할 수 없습니다.
+
+- 인앱 광고 테스트 페이지
+  - src/pages/InAppAdsPage.tsx
+- 인앱 결제 테스트 페이지
+  - src/pages/InAppPurchasePage.tsx
+- 관련 훅
+  - src/hooks/useInAppAds.tsx
+  - src/hooks/useInAppPurchase.ts
+
+## 데이터 저장 방식
+
+- 저장소: localStorage
+- 핵심 키
+  - @pet_health_diary
+  - @pet_health_theme_mode
+  - @pet_health_language
+  - @pet_health_points
+
+## 기술 스택
+
+### Runtime / Framework
+- React 18
+- TypeScript 5
+- React Router DOM 7
+- Vite 6
+
+### UI
+- Tailwind CSS
+- TDS Mobile AIT Provider
 
 ### Apps in Toss
-- **@apps-in-toss/web-framework 2.6** - 앱인토스 프레임워크
-  - 인앱 광고 (In-App Ads)
-  - 인앱 결제 (In-App Purchase)
+- @apps-in-toss/web-framework
 
-### UI & 스타일링
-- **Toss Design System (TDS Mobile) 2.3** - UI 컴포넌트
-- **Emotion 11.14** - CSS-in-JS
-- **@toss/tds-colors** - 디자인 시스템 컬러
+### i18n
+- i18next
+- react-i18next
 
-### 다국어 & 국제화
-- **i18next 26.2** - 국제화 프레임워크
-- **react-i18next 17.0** - React i18next 통합
-- **지원 언어**: 한국어(ko), 영어(en), 러시아어(ru), 베트남어(vi), 중국어(zh), 태국어(th)
+## 시작하기
 
-### 개발 도구
-- **ESLint 9.21** - 코드 품질 관리
-- **Prettier 3.4** - 코드 포맷팅
-- **TypeScript ESLint 8.24** - TypeScript 린팅
-
-## 📁 프로젝트 구조
-
-```
-src/
-├── contexts/          # React Context (전역 상태 관리)
-│   └── AppContext.tsx # 테마/언어 설정 관리
-├── hooks/             # Custom Hooks
-│   ├── useInAppAds.tsx      # 인앱 광고 Hook
-│   └── useInAppPurchase.ts  # 인앱 결제 Hook
-├── i18n/              # 다국어 설정
-│   ├── index.ts       # i18next 설정
-│   └── locales/       # 언어별 번역 파일 (ko, en, ru, vi, zh, th)
-├── pages/             # 페이지 컴포넌트
-│   ├── HomePage.tsx            # 홈 (대시보드)
-│   ├── PetProfilePage.tsx      # 반려동물 프로필 관리
-│   ├── VaccinationPage.tsx     # 예방접종 관리
-│   ├── MedicalPage.tsx         # 병원 방문 기록
-│   ├── WeightPage.tsx          # 체중 관리
-│   ├── SettingsPage.tsx        # 설정 (언어/테마)
-│   ├── InAppAdsPage.tsx        # 인앱 광고 테스트
-│   └── InAppPurchasePage.tsx   # 인앱 결제 테스트
-├── shared/            # 공유 유틸리티
-│   ├── constants.ts   # 상수 정의
-│   ├── theme.ts       # 테마 관리
-│   ├── types.ts       # TypeScript 타입 정의
-│   └── utils.ts       # 유틸리티 함수
-└── utils/
-    └── storage.ts     # localStorage 관리
-
-docs/skills/           # 프로젝트 문서
-├── apps-in-toss.md   # Apps in Toss 가이드
-└── tds-mobile.md     # TDS Mobile 사용법
-```
-
-## ✨ 주요 기능
-
-### 🏠 홈 (대시보드)
-- 반려동물 요약 카드 (가로 스크롤)
-- 빠른 시작 버튼 (프로필/예방접종/병원/체중)
-- 다가오는 예방접종 일정 (최대 3개)
-- 최근 병원 방문 기록 (최대 3개)
-
-### 🐶 반려동물 프로필 관리
-- 반려동물 등록/수정/삭제
-- 기본 정보: 이름, 종류, 품종, 생년월일, 성별, 체중
-- 추가 정보: 입양일, 특이사항 메모
-- 프로필 사진 업로드 (base64 저장)
-
-### 💉 예방접종 관리
-- 예방접종 기록 추가/수정/삭제
-- 백신명, 접종일, 병원명
-- 다음 접종 예정일 관리
-- 메모 기능
-
-### 🏥 병원 방문 기록
-- 병원 방문 기록 추가/수정/삭제
-- 증상, 진단명, 치료 내용
-- 진료비 기록
-- 다음 방문 예정일
-- 메모 기능
-
-### ⚖️ 체중 관리
-- 체중 기록 추가/수정/삭제
-- 체중 변화 차트 시각화
-- 측정일별 체중 데이터
-- 메모 기능
-
-### ⚙️ 설정
-- **다국어 지원**: 한국어, 영어, 러시아어, 베트남어, 중국어, 태국어
-- **테마 설정**: Auto (시스템 설정 따름), Light, Dark 모드
-- 설정 자동 저장 (localStorage)
-
-### 💰 Apps in Toss 기능
-- **인앱 광고**: 전면 광고 (Fullscreen Ad) 지원
-- **인앱 결제**: 상품 목록 조회 및 결제 처리
-
-### 🪙 포인트 시스템 & 토스 프로모션
-- **포인트 적립**: 데이터 추가 시 1P 자동 적립
-  - 반려동물 프로필 등록: +1P
-  - 예방접종 기록 추가: +1P
-  - 병원 방문 기록 추가: +1P
-  - 체중 기록 추가: +1P
-- **토스 포인트 전환**: 적립된 포인트를 실제 토스 포인트로 전환
-- **자동 초기화**: 앱 최초 실행 시 기존 데이터 개수만큼 포인트 자동 지급
-- **영구 저장**: localStorage를 통한 포인트 영구 보관
-
-#### 토스 프로모션 연동 설정
-
-포인트를 실제 토스 포인트로 전환하려면 앱인토스 콘솔에서 프로모션을 설정해야 합니다:
-
-1. **앱인토스 콘솔 접속**
-   - [앱인토스 콘솔](https://console.apps-in-toss.im/) 로그인
-   
-2. **프로모션 생성**
-   - 좌측 메뉴: 성장 > 프로모션(토스 포인트)
-   - "프로모션 만들기" 클릭
-   - 프로모션 정보 입력:
-     - 프로모션 이름: "펫 건강 다이어리 포인트 전환"
-     - 액션 유형: REWARD
-     - 포인트 지급 방식 설정
-   
-3. **Promotion ID 설정**
-   - 생성된 프로모션의 ID 복사
-   - `src/shared/constants.ts` 파일 수정:
-   ```typescript
-   export const PROMOTION_ID = '발급받은_프로모션_ID';
-   ```
-
-4. **API 연동 코드 활성화**
-   - `src/pages/HomePage.tsx` 파일에서 TODO 주석 확인
-   - 주석 처리된 프로모션 API 코드 활성화:
-   ```typescript
-   import { executePromotion } from '@apps-in-toss/web-framework';
-   
-   const result = await executePromotion({
-     promotionId: PROMOTION_ID,
-     actionType: 'REWARD',
-     metadata: {
-       points: points,
-       timestamp: new Date().toISOString(),
-       source: 'pet_health_diary',
-     },
-   });
-   ```
-
-5. **테스트**
-   - 샌드박스 앱 또는 토스 앱에서 실행 (브라우저 X)
-   - 포인트 적립 후 전환 기능 테스트
-
-**참고 문서**:
-- [프로모션(토스 포인트) 이해하기](https://developers-apps-in-toss.toss.im/promotion/intro.md)
-- [프로모션 콘솔 가이드](https://developers-apps-in-toss.toss.im/promotion/console.md)
-- [프로모션 개발 가이드](https://developers-apps-in-toss.toss.im/promotion/develop.md)
-- [비게임 프로모션 API](https://developers-apps-in-toss.toss.im/bedrock/reference/framework/비게임/promotion.md)
-
-### 💾 데이터 관리
-- localStorage 기반 데이터 저장
-- JSON 내보내기/가져오기 기능
-- 전체 데이터 초기화 기능
-
-## 🚀 시작하기
-
-### 개발 환경 요구사항
-- Node.js 18 이상
-- npm 또는 yarn
+### 요구사항
+- Node.js 18+
+- npm
 
 ### 설치
 
 ```bash
-# 의존성 설치
 npm install
 ```
 
-### 개발 서버 실행
+### 개발 서버
 
 ```bash
-# Vite 개발 서버 시작 (http://localhost:5173)
 npm run dev
 ```
 
 ### 빌드
 
 ```bash
-# 프로덕션 빌드
 npm run build
 ```
 
-### 코드 품질 관리
+### 배포
 
 ```bash
-# ESLint 실행
-npm run lint
-
-# Prettier 포맷팅
-npm run format
-```
-
-## 📦 배포하기
-
-Apps in Toss 배포를 위해서는 앱인토스 콘솔에서 API 키가 필요합니다.
-
-### API 키 발급
-1. [앱인토스 콘솔](https://apps-in-toss.toss.im/) 접속
-2. 워크스페이스 > API 키 > 콘솔 API 키 발급
-
-### 배포 명령어
-
-```bash
-# 빌드 후 배포
-npm run build
 npm run deploy
 ```
 
-## 🗂️ 데이터 구조
+### 린트/포맷
 
-### Pet (반려동물)
-```typescript
-{
-  id: string;
-  name: string;
-  species: string; // '강아지', '고양이', '기타'
-  breed?: string;
-  birthDate?: string;
-  gender?: 'male' | 'female' | 'unknown';
-  weight?: number; // kg
-  photo?: string; // base64
-  adoptionDate?: string;
-  notes?: string;
-  createdAt: string;
-  updatedAt: string;
-}
+```bash
+npm run lint
+npm run format
 ```
 
-### Vaccination (예방접종)
-```typescript
-{
-  id: string;
-  petId: string;
-  vaccineName: string;
-  vaccinationDate: string;
-  nextDueDate?: string;
-  hospitalName?: string;
-  notes?: string;
-  createdAt: string;
-  updatedAt: string;
-}
+## 프로젝트 구조
+
+```text
+src/
+  App.tsx
+  main.tsx
+  contexts/
+    AppContext.tsx
+  pages/
+    HomePage.tsx
+    PetProfilePage.tsx
+    VaccinationPage.tsx
+    MedicalPage.tsx
+    WeightPage.tsx
+    SettingsPage.tsx
+  utils/
+    storage.ts
+  shared/
+    constants.ts
+    types.ts
 ```
 
-### MedicalRecord (병원 기록)
-```typescript
-{
-  id: string;
-  petId: string;
-  visitDate: string;
-  hospitalName: string;
-  symptoms?: string;
-  diagnosis?: string;
-  treatment?: string;
-  cost?: number;
-  nextVisitDate?: string;
-  notes?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-```
+## 참고 링크
 
-### WeightRecord (체중 기록)
-```typescript
-{
-  id: string;
-  petId: string;
-  weight: number; // kg
-  measureDate: string;
-  notes?: string;
-  createdAt: string;
-}
-```
-
-## 🔗 유용한 링크
-
-### Apps in Toss
-- [앱인토스 콘솔](https://apps-in-toss.toss.im/)
-- [앱인토스 개발자센터](https://developers-apps-in-toss.toss.im/)
-- [앱인토스 개발자 커뮤니티](https://techchat-apps-in-toss.toss.im/)
-- [AI 개발 가이드](https://developers-apps-in-toss.toss.im/development/llms.html)
-
-### 문서
-- [인앱 광고 가이드](https://developers-apps-in-toss.toss.im/ads/intro.html)
-- [인앱 결제 가이드](https://developers-apps-in-toss.toss.im/iap/intro.html)
-- [TDS Mobile 문서](https://toss.im/tds)
-
-## 📝 라이선스
-
-이 프로젝트는 Apps in Toss 플랫폼 위에서 동작하는 미니앱입니다.
-
-## 👨‍💻 개발자
-
-사이드 프로젝트 - Pet Health Diary
-
----
-
-**Made with ❤️ for pet lovers**
+- Apps in Toss 콘솔: https://console.apps-in-toss.im/
+- Apps in Toss 개발자 문서: https://developers-apps-in-toss.toss.im/
+- TDS 문서: https://toss.im/tds
