@@ -9,8 +9,7 @@
  * - 삭제 시 cascade delete
  */
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PetHealthStorage } from '../utils/storage';
 import { useApp } from '../contexts/AppContext';
@@ -18,7 +17,6 @@ import { calculateAge, generateId } from '../shared/utils';
 import type { Pet } from '../shared/types';
 
 export function PetProfilePage() {
-  const navigate = useNavigate();
   const { t } = useTranslation();
   const { addPoints } = useApp();
   const [pets, setPets] = useState<Pet[]>([]);
@@ -114,9 +112,6 @@ export function PetProfilePage() {
       {/* 헤더 */}
       <header className="flex-shrink-0 header-safe-top pb-3 px-5 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
         <div className="flex justify-between items-center">
-          <button className="text-2xl text-gray-900 dark:text-gray-100 hover:opacity-80 active:scale-95 transition-transform" onClick={() => navigate('/')}>
-            ←
-          </button>
           <h1 className="text-xl font-bold text-gray-900 dark:text-white flex-1 text-center">{t('pet.title')}</h1>
           <div className="w-6"></div>
         </div>

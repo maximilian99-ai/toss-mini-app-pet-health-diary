@@ -8,7 +8,7 @@
  * - 기한 지난 접종 표시
  */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PetHealthStorage } from '../utils/storage';
@@ -141,9 +141,6 @@ export function VaccinationPage() {
       <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
         <header className="flex-shrink-0 header-safe-top pb-3 px-5 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
           <div className="flex justify-between items-center">
-            <button className="text-2xl text-gray-900 dark:text-gray-100 hover:opacity-80 active:scale-95 transition-transform" onClick={() => navigate('/')}>
-              ←
-            </button>
             <h1 className="text-xl font-bold text-gray-900 dark:text-white flex-1 text-center">{t('vaccination.title')}</h1>
             <div className="w-6"></div>
           </div>
@@ -168,9 +165,6 @@ export function VaccinationPage() {
     <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
       <header className="flex-shrink-0 header-safe-top pb-3 px-5 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
         <div className="flex justify-between items-center">
-          <button className="text-2xl text-gray-900 dark:text-gray-100 hover:opacity-80 active:scale-95 transition-transform" onClick={() => navigate('/')}>
-            ←
-          </button>
           <h1 className="text-xl font-bold text-gray-900 dark:text-white flex-1 text-center">{t('vaccination.title')}</h1>
           <div className="w-6"></div>
         </div>
